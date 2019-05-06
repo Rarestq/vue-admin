@@ -18,7 +18,7 @@
           ></el-option>
         </el-select>
         <el-form-item>
-          <el-button type="primary" v-on:click="getUsers">查询</el-button>
+          <el-button type="primary" v-on:click="getAdmins">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleAdd">新增</el-button>
@@ -36,18 +36,12 @@
     >
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="index" width="60"></el-table-column>
-      <el-table-column prop="adminId" label="管理员id" width="180" v-if="false"></el-table-column>
+      <el-table-column prop="adminId" label="管理员id" width="80" v-if="false"></el-table-column>
       <el-table-column prop="adminNo" label="管理员编号" width="180" sortable></el-table-column>
-      <el-table-column prop="adminName" label="姓名" width="120" sortable></el-table-column>
-      <el-table-column prop="adminPhone" label="电话" width="100" sortable></el-table-column>
-      <el-table-column prop="password" label="登录密码" min-width="150" sortable></el-table-column>
-      <el-table-column
-        prop="adminType"
-        label="类型"
-        width="150"
-        :formatter="formatAdminType"
-        sortable
-      ></el-table-column>
+      <el-table-column prop="adminName" label="姓名" width="100" sortable></el-table-column>
+      <el-table-column prop="adminPhone" label="电话" width="125" sortable></el-table-column>
+      <el-table-column prop="password" label="登录密码" min-width="100" sortable></el-table-column>
+      <el-table-column prop="adminType" label="类型" width="130" sortable></el-table-column>
       <el-table-column
         prop="gmtCreate"
         label="创建时间"
@@ -70,40 +64,46 @@
       </el-table-column>
     </el-table>
 
-    <!--工具条-->
+    <!--批量删除工具条-->
     <el-col :span="24" class="toolbar">
       <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
-      <el-pagination
-        layout="total, sizes, prev, pager, next, jumper"
-        @current-change="handleCurrentChange"
-        :page-size="20"
-        :page-count="pages"
-        @size-change="handleSizeChange"
-        :total="total"
-        style="float:right;"
-      ></el-pagination>
+      <div style="float: right">
+        <el-pagination
+          layout="total, sizes, prev, pager, next, jumper"
+          @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
+          :current-page="currentPage"
+          :page-sizes="[10, 20, 30, 50, 100]"
+          :page-size="10"
+          :page-count="pages"
+          :total="total"
+        ></el-pagination>
+      </div>
     </el-col>
 
     <!--编辑界面-->
     <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="editForm.name" auto-complete="off"></el-input>
+        <el-form-item label="姓名" prop="adminName">
+          <el-input v-model="editForm.adminName"></el-input>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="editForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
+        <el-form-item label="类型" prop="adminType">
+          <el-select
+            v-model="editForm.adminType"
+            value-key="adminType"
+            clearable
+            placeholder="管理员类型"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="年龄">
-          <el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
-        </el-form-item>
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="editForm.addr"></el-input>
+        <el-form-item label="手机号" prop="adminPhone">
+          <el-input v-model="editForm.adminPhone"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -115,23 +115,44 @@
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="addForm.name" auto-complete="off"></el-input>
+        <el-form-item label="姓名">
+          <el-input
+            v-model="addForm.adminName"
+            auto-complete="on"
+            name="adminName"
+            placeholder="请输入姓名"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="addForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
+        <el-form-item label="类型">
+          <el-select
+            v-model="addForm.adminType"
+            value-key="adminType"
+            clearable
+            placeholder="请选择管理员类型"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="年龄">
-          <el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
+        <el-form-item label="手机号">
+          <el-input
+            v-model="addForm.adminPhone"
+            auto-complete="on"
+            name="adminPhone"
+            placeholder="请输入手机号"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="addForm.addr"></el-input>
+        <el-form-item label="登录密码">
+          <el-input
+            v-model="addForm.password"
+            auto-complete="on"
+            name="password"
+            placeholder="请输入登录密码"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -147,10 +168,11 @@ import util from "../../common/js/util";
 import moment from "moment";
 //import NProgress from 'nprogress'
 import {
-  getUserListPage,
-  batchRemoveUser,
-  saveUser,
-  addUser
+  getAdminListPage,
+  removeAdmin,
+  batchRemoveAdmin,
+  saveAdmin,
+  addAdmin
 } from "../../api/api";
 
 export default {
@@ -186,79 +208,92 @@ export default {
       editFormVisible: false, //编辑界面是否显示
       editLoading: false,
       editFormRules: {
-        name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
+        adminName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+        adminType: [
+          { required: true, message: "请选择管理员类型", trigger: "blur" }
+        ],
+        adminPhone: [
+          { required: true, message: "请输入手机号", trigger: "blur" }
+        ]
       },
-      //编辑界面数据
+      // 编辑界面数据
       editForm: {
+        adminId: null,
         adminName: "",
-        phone: "",
-        password: "",
+        adminPhone: "",
         adminType: -1
       },
 
       addFormVisible: false, //新增界面是否显示
       addLoading: false,
       addFormRules: {
-        name: [{ required: true, message: "请输入姓名", trigger: "blur" }]
+        adminName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+        adminType: [
+          { required: true, message: "请选择管理员类型", trigger: "blur" }
+        ],
+        adminPhone: [
+          { required: true, message: "请输入手机号", trigger: "blur" }
+        ],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       },
-      //新增界面数据
+      // 新增界面数据
       addForm: {
-        name: "",
-        phone: "",
+        adminName: "",
+        adminPhone: "",
         password: "",
-        adminType: -1
+        adminType: null
       }
     };
   },
   methods: {
-    //管理员类型显示转换
-    formatAdminType: function(row, column) {
-      return row.adminType == 1
-        ? "普通管理员"
-        : row.adminType == 2
-        ? "超级管理员"
-        : "系统";
-    },
+    // 管理员类型显示转换
+    // formatAdminType: function(para) {
+    //   para.adminType === "普通管理员"
+    //     ? 1
+    //     : para.adminType === "超级管理员"
+    //     ? 2
+    //     : 3;
+    // },
 
-    //时间格式化
+    // 时间格式化
     dateFormat: function(row, column) {
       // console.log(row, column);
       const date = row[column.property];
       if (date === undefined) {
         return "";
       }
-      //这里的格式根据需求修改
+      // 这里的格式根据需求修改
       return moment(date).format("YYYY-MM-DD HH:mm");
     },
 
     // 分页
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.getUsers();
+      this.getAdmins();
     },
 
     // 显示条数变化
     handleSizeChange(val) {
       this.pageSize = val;
-      this.getUsers();
+      this.getAdmins();
     },
-    //获取用户列表
-    getUsers() {
+
+    //获取管理员信息列表
+    getAdmins() {
       let para = {
         currentPage: this.currentPage,
+        adminId: this.adminId,
         adminNo: this.filters.adminNo,
         adminName: this.filters.adminName,
         adminType: this.filters.adminType
       };
       this.listLoading = true;
-      //NProgress.start();
-      getUserListPage(para).then(res => {
+      getAdminListPage(para).then(res => {
         if (res.data.success) {
           this.total = res.data.data.total;
-          this.pages = res.data.data.pageCount;
-          this.pageSize = res.data.data.pageSize;
+          this.pages = res.data.data.pages;
+          this.pageSize = res.data.data.size;
           this.users = res.data.data.records;
-          console.log(this.filters.adminType)
           this.listLoading = false;
           this.$message({
             message: res.data.message,
@@ -272,27 +307,7 @@ export default {
         }
       });
     },
-    //删除
-    // handleDel: function (index, row) {
-    // 	this.$confirm('确认删除该记录吗?', '提示', {
-    // 		type: 'warning'
-    // 	}).then(() => {
-    // 		this.listLoading = true;
-    // 		//NProgress.start();
-    // 		let para = { id: row.id };
-    // 		removeUser(para).then((res) => {
-    // 			this.listLoading = false;
-    // 			//NProgress.done();
-    // 			this.$message({
-    // 				message: '删除成功',
-    // 				type: 'success'
-    // 			});
-    // 			this.getUsers();
-    // 		});
-    // 	}).catch(() => {
 
-    // 	});
-    // },
     //显示编辑界面
     handleEdit: function(index, row) {
       this.editFormVisible = true;
@@ -302,26 +317,34 @@ export default {
     handleAdd: function() {
       this.addFormVisible = true;
       this.addForm = {
-        name: "",
-        sex: -1,
-        age: 0,
-        birth: "",
-        addr: ""
+        adminName: "",
+        adminPhone: "",
+        password: "",
+        adminType: "普通管理员"
       };
     },
-    //编辑
+    //编辑管理员信息
     editSubmit: function() {
       this.$refs.editForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.editLoading = true;
-            //NProgress.start();
             let para = Object.assign({}, this.editForm);
-            para.birth =
-              !para.birth || para.birth == ""
-                ? ""
-                : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-            saveUser(para).then(res => {
+            if (para.adminType === "普通管理员") {
+              para.adminType = 1;
+            } else if (para.adminType === "超级管理员") {
+              para.adminType = 2;
+            } else {
+              para.adminType = 3;
+            }
+            delete para.adminNo;
+            delete para.gmtCreate;
+            delete para.gmtModified;
+            // para.birth =
+            //   !para.birth || para.birth == ""
+            //     ? ""
+            //     : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
+            saveAdmin(para).then(res => {
               this.editLoading = false;
               //NProgress.done();
               this.$message({
@@ -330,13 +353,13 @@ export default {
               });
               this.$refs["editForm"].resetFields();
               this.editFormVisible = false;
-              this.getUsers();
+              this.getAdmins();
             });
           });
         }
       });
     },
-    //新增
+    //新增管理员信息
     addSubmit: function() {
       this.$refs.addForm.validate(valid => {
         if (valid) {
@@ -344,11 +367,22 @@ export default {
             this.addLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.addForm);
-            para.birth =
-              !para.birth || para.birth == ""
-                ? ""
-                : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
-            addUser(para).then(res => {
+            if (para.adminType === "普通管理员") {
+              para.adminType = 1;
+            } else if (para.adminType === "超级管理员") {
+              para.adminType = 2;
+            } else {
+              para.adminType = 3;
+            }
+            delete para.adminId;
+            delete para.adminNo;
+            delete para.gmtCreate;
+            delete para.gmtModified;
+            // para.birth =
+            //   !para.birth || para.birth == ""
+            //     ? ""
+            //     : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
+            addAdmin(para).then(res => {
               this.addLoading = false;
               //NProgress.done();
               this.$message({
@@ -357,7 +391,7 @@ export default {
               });
               this.$refs["addForm"].resetFields();
               this.addFormVisible = false;
-              this.getUsers();
+              this.getAdmins();
             });
           });
         }
@@ -366,31 +400,65 @@ export default {
     selsChange: function(sels) {
       this.sels = sels;
     },
-    //批量删除
+
+    // 删除
+    handleDel: function(index, row) {
+      this.$confirm("确认删除该记录吗?", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          this.listLoading = true;
+          let para = { adminIds: row.adminId };
+          removeAdmin(para).then(res => {
+            this.listLoading = false;
+            if (res.data.success) {
+              this.$message({
+                message: res.data.message,
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.data.message,
+                type: "error"
+              });
+            }
+            this.getAdmins();
+          });
+        })
+        .catch(() => {});
+    },
+
+    //批量删除管理员信息
     batchRemove: function() {
-      var ids = this.sels.map(item => item.id).toString();
+      var ids = this.sels.map(item => item.adminId).toString();
       this.$confirm("确认删除选中记录吗？", "提示", {
         type: "warning"
       })
         .then(() => {
           this.listLoading = true;
           //NProgress.start();
-          let para = { ids: ids };
-          batchRemoveUser(para).then(res => {
+          let para = { adminIds: ids };
+          batchRemoveAdmin(para).then(res => {
             this.listLoading = false;
-            //NProgress.done();
-            this.$message({
-              message: "删除成功",
-              type: "success"
-            });
-            this.getUsers();
+            if (res.data.success) {
+              this.$message({
+                message: res.data.message,
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.data.message,
+                type: "error"
+              });
+            }
+            this.getAdmins();
           });
         })
         .catch(() => {});
     }
   },
   mounted() {
-    this.getUsers();
+    this.getAdmins();
   }
 };
 </script>
