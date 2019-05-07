@@ -3,11 +3,13 @@ import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
 import Main from './views/Main.vue'
 import Admin from './views/admin/Admin.vue'
-import Form from './views/admin/Form.vue'
+import ChargeRule from './views/admin/ChargeRule.vue'
 import Page4 from './views/luggage-storage/Page4.vue'
 import Page5 from './views/luggage-storage/Page5.vue'
 import LuggageStorage from './views/luggage-storage/LuggageStorage.vue'
 import LuggageType from './views/luggage-type/LuggageType.vue'
+import Turnover from './views/turnover-record/Turnover.vue'
+import OverdueRecord from './views/overdue-record/OverdueRecord.vue'
 import echarts from './views/charts/echarts.vue'
 
 let routes = [
@@ -31,8 +33,8 @@ let routes = [
         iconCls: 'el-icon-message', //图标样式class
         children: [
             { path: '/main', component: Main, name: '主页', hidden: true },
-            { path: '/admin', component: Admin, name: 'Admin' },
-            { path: '/form', component: Form, name: 'Form' },
+            { path: '/admin', component: Admin, name: '管理员信息' },
+            { path: '/rule', component: ChargeRule, name: '计费规则信息' },
         ]
     },
     {
@@ -43,17 +45,18 @@ let routes = [
         children: [
             { path: '/page4', component: Page4, name: '页面4' },
             { path: '/page5', component: Page5, name: '页面5' },
-            { path: '/storage', component: LuggageStorage, name: 'luggageStorage' }
+            { path: '/storage', component: LuggageStorage, name: '行李寄存记录' }
         ]
     },
     {
         path: '/',
         component: Home,
-        name: '行李类型',
-        iconCls: 'fa fa-address-card',
-        leaf: true,//只有一个节点
+        name: '行李逾期未取清理模块',
+        iconCls: 'fa fa-id-card-o',
         children: [
-            { path: '/luggage_type', component: LuggageType, name: 'luggage_type' }
+            { path: '/page4', component: Page4, name: '页面4' },
+            { path: '/page5', component: Page5, name: '页面5' },
+            { path: '/overdue', component: OverdueRecord, name: '行李逾期记录' }
         ]
     },
     {
@@ -63,6 +66,37 @@ let routes = [
         iconCls: 'fa fa-bar-chart',
         children: [
             { path: '/echarts', component: echarts, name: 'echarts' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '营业额记录模块',
+        iconCls: 'fa fa-id-card-o',
+        children: [
+            { path: '/turnover', component: Turnover, name: '营业额记录' },
+            { path: '/turnover/query', component: Page4, name: '按照管理员分组的营业额' },
+            { path: '/turnover/statistics', component: Page5, name: '每天的营业额' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '行李类型',
+        iconCls: 'fa fa-address-card',
+        leaf: true,//只有一个节点
+        children: [
+            { path: '/luggage_type', component: LuggageType, name: '行李类型' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '计费规则',
+        iconCls: 'fa fa-address-card',
+        leaf: true,//只有一个节点
+        children: [
+            { path: '/rule', component: ChargeRule, name: '计费规则' }
         ]
     },
     {

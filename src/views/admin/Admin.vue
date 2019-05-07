@@ -40,7 +40,7 @@
       <el-table-column prop="adminNo" label="管理员编号" width="180" sortable></el-table-column>
       <el-table-column prop="adminName" label="姓名" width="100" sortable></el-table-column>
       <el-table-column prop="adminPhone" label="电话" width="125" sortable></el-table-column>
-      <el-table-column prop="password" label="登录密码" min-width="100" sortable></el-table-column>
+      <el-table-column prop="password" label="登录密码" min-width="120" sortable></el-table-column>
       <el-table-column prop="adminType" label="类型" width="130" sortable></el-table-column>
       <el-table-column
         prop="gmtCreate"

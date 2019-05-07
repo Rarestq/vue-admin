@@ -27,6 +27,8 @@ export const getLuggageTypeListPair = params => { return axios.get(`${base}/lugg
 export const getLuggageTypes = params => { return axios.get(`${base}/luggage_type`, { params: params }); };
 
 // 行李计费规则相关接口
+export const getChargeCalculateRulesPair = params => { return axios.get(`${base}/rule/pair`, { params: params }); };
+export const getChargeCalculateRules = params => { return axios.get(`${base}/rule/query`, { params: params }); };
 export const getChargeCalculateRuleList = params => { return axios.get(`${base}/rule`, { params: params }); };
 
 // 短信相关接口 
@@ -41,3 +43,9 @@ export const getLostRegisterRecordListPage = params => { return axios.get(`${bas
 
 // 行李逾期未取清理相关接口
 export const getOverdueRecordListPage = params => { return axios.get(`${base}/overdue`, { params: params }); };
+
+// 营业额记录相关接口
+export const getTurnoverRecordListPage = params => { return axios.get(`${base}/turnover`, { params: params }); };
+export const getTurnoverRecordPair = params => { return axios.get(`${base}/turnover/query`, { params: params }); };
+export const statisticsTotalTurnover = params => { return axios.get(`${base}/turnover/statistics`, { params: params }); };
+
