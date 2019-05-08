@@ -69,10 +69,7 @@
       <el-table-column label="操作" width="280">
         <template slot-scope="scope">
           <!-- 如果是已逾期的记录，则不能进行「正常取件」操作 -->
-          <el-button
-            size="small"
-            @click="commonPickup(scope.$index, scope.row)"
-          >正常取件</el-button>
+          <el-button size="small" @click="commonPickup(scope.$index, scope.row)">正常取件</el-button>
           <el-button type="info" size="small" @click="overduePickup(scope.$index, scope.row)">逾期取件</el-button>
           <el-button type="danger" size="small" @click="markAsLost(scope.$index, scope.row)">标记遗失</el-button>
         </template>
@@ -88,7 +85,7 @@
           @size-change="handleSizeChange"
           :current-page="currentPage"
           :page-sizes="[10, 20, 30, 50, 100]"
-          :page-size="10"
+          :page-size="pageSize"
           :page-count="pages"
           :total="total"
         ></el-pagination>
@@ -173,37 +170,40 @@
 <script>
 import util from "../../common/js/util";
 import moment from "moment";
-import Vue from "vue"
+import Vue from "vue";
 import {
   getStorageRecordListPage,
-  addLuggageStorageRecord
+  addLuggageStorageRecord,
+  addCommonPickupRecord,
+  addmarkLuggageAsLostRecord,
+  addOverduePickupRecord
 } from "../../api/api";
 
 // 权限指令
-Vue.directive("has", {
-  bind: function(el, binding) {
-    if (!Vue.prototype.$_has(binding.value)) {
-      el.parentNode.removeChild(el);
-    }
-  }
-});
-//权限检查方法
-Vue.prototype.$_has = function(value) {
-  // debugger;
-  let isExist = false;
-  let buttonpermsStr = sessionStorage.getItem("buttenpremissions");
-  if (buttonpermsStr == undefined || buttonpermsStr == null) {
-    return false;
-  }
-  let buttonperms = JSON.parse(buttonpermsStr);
-  for (let i = 0; i < buttonperms.length; i++) {
-    if (buttonperms[i].perms.indexOf(value) > -1) {
-      isExist = true;
-      break;
-    }
-  }
-  return isExist;
-};
+// Vue.directive("has", {
+//   bind: function(el, binding) {
+//     if (!Vue.prototype.$_has(binding.value)) {
+//       el.parentNode.removeChild(el);
+//     }
+//   }
+// });
+// //权限检查方法
+// Vue.prototype.$_has = function(value) {
+//   // debugger;
+//   let isExist = false;
+//   let buttonpermsStr = sessionStorage.getItem("buttenpremissions");
+//   if (buttonpermsStr == undefined || buttonpermsStr == null) {
+//     return false;
+//   }
+//   let buttonperms = JSON.parse(buttonpermsStr);
+//   for (let i = 0; i < buttonperms.length; i++) {
+//     if (buttonperms[i].perms.indexOf(value) > -1) {
+//       isExist = true;
+//       break;
+//     }
+//   }
+//   return isExist;
+// };
 
 export default {
   data() {
@@ -292,6 +292,7 @@ export default {
       storageRecords: [],
       total: 0,
       pages: 1,
+      pageSize: 10,
       currentPage: 1,
       listLoading: false,
       sels: [], //列表选中列
@@ -347,13 +348,26 @@ export default {
       this.getLuggageStorageRecords();
     },
 
-    // 根据行李类型联动计费规则
-    getChargeRuleByLuggageType(val) {},
+    // 正常取件
+    commonPickup(val) {
+
+    },
+
+    // 逾期取件
+    overduePickup() {
+
+    },
+
+    // 标记遗失
+    markAsLost() {
+
+    },
 
     // 获取行李寄存记录列表
     getLuggageStorageRecords() {
       let para = {
-        currentPage: this.currentPage,
+        current: this.currentPage,
+        size: this.pageSize,
         luggageId: this.luggageId,
         luggageRecordNo: this.filters.luggageRecordNo,
         depositorName: this.filters.depositorName,

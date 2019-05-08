@@ -74,7 +74,7 @@
           @size-change="handleSizeChange"
           :current-page="currentPage"
           :page-sizes="[10, 20, 30, 50, 100]"
-          :page-size="10"
+          :page-size="pageSize"
           :page-count="pages"
           :total="total"
         ></el-pagination>
@@ -201,6 +201,7 @@ export default {
       users: [],
       total: 0,
       pages: 1,
+      pageSize: 10,
       currentPage: 1,
       listLoading: false,
       sels: [], //列表选中列
@@ -281,7 +282,8 @@ export default {
     //获取管理员信息列表
     getAdmins() {
       let para = {
-        currentPage: this.currentPage,
+        current: this.currentPage,
+        size: this.pageSize,
         adminId: this.adminId,
         adminNo: this.filters.adminNo,
         adminName: this.filters.adminName,
@@ -296,6 +298,7 @@ export default {
           this.users = res.data.data.records;
           this.listLoading = false;
           this.$message({
+            // 后台返回的操作结果
             message: res.data.message,
             type: "success"
           });

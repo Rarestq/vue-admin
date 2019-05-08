@@ -10,6 +10,7 @@ import LuggageStorage from './views/luggage-storage/LuggageStorage.vue'
 import LuggageType from './views/luggage-type/LuggageType.vue'
 import Turnover from './views/turnover-record/Turnover.vue'
 import OverdueRecord from './views/overdue-record/OverdueRecord.vue'
+import PickupRecord from './views/pickup-record/PickupRecord.vue'
 import echarts from './views/charts/echarts.vue'
 
 let routes = [
@@ -46,6 +47,15 @@ let routes = [
             { path: '/page4', component: Page4, name: '页面4' },
             { path: '/page5', component: Page5, name: '页面5' },
             { path: '/storage', component: LuggageStorage, name: '行李寄存记录' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '行李取件模块',
+        iconCls: 'fa fa-bar-chart',
+        children: [
+            { path: '/pickup', component: PickupRecord, name: '行李取件记录' }
         ]
     },
     {

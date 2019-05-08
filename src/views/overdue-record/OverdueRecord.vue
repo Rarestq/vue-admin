@@ -53,7 +53,7 @@
           @size-change="handleSizeChange"
           :current-page="currentPage"
           :page-sizes="[10, 20, 30, 50, 100]"
-          :page-size="10"
+          :page-size="pageSize"
           :page-count="pages"
           :total="total"
         ></el-pagination>
@@ -91,6 +91,7 @@ export default {
       overdueRecords: [],
       total: 0,
       pages: 1,
+      pageSize: 10,
       currentPage: 1,
       listLoading: false
     };
@@ -122,7 +123,8 @@ export default {
     // 获取行李逾期记录列表
     getOverdueRecords() {
       let para = {
-        currentPage: this.currentPage,
+        current: this.currentPage,
+        size: this.pageSize,
         luggageRecordNo: this.filters.luggageRecordNo,
         depositorName: this.filters.depositorName,
         status: this.filters.status
