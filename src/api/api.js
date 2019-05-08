@@ -19,8 +19,8 @@ export const addLuggageStorageRecord = params => { return axios.post(`${base}/st
 // 行李取件相关接口
 export const getPickupLuggageRecordListPage = params => { return axios.get(`${base}/pickup`, { params: params }); };
 export const addCommonPickupRecord = params => { return axios.post(`${base}/pickup/common_pickup`, params).then(res => res.data); };
-export const addmarkLuggageAsLostRecord = params => { return axios.post(`${base}/storage/mark_as_lost`, params).then(res => res.data); };
-export const addOverduePickupRecord = params => { return axios.post(`${base}/storage/overdue_pickup`, params).then(res => res.data); };
+export const addmarkLuggageAsLostRecord = params => { return axios.post(`${base}/pickup/mark_as_lost`, params).then(res => res.data); };
+export const addOverduePickupRecord = params => { return axios.post(`${base}/pickup/overdue_pickup`, params).then(res => res.data); };
 
 // 行李类型相关接口
 export const getLuggageTypeListPair = params => { return axios.get(`${base}/luggage_type/pair`, { params: params }); };

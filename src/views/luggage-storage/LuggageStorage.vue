@@ -69,19 +69,21 @@
       ></el-table-column>
       <el-table-column label="操作" width="280">
         <template slot-scope="scope">
-          <!-- 如果是已逾期的记录，则不能进行「正常取件」操作 -->
-          <el-button size="small" @click="commonPickup(scope.$index, scope.row)">正常取件</el-button>
-          <el-button type="info" size="small" @click="overduePickup(scope.$index, scope.row)">逾期取件</el-button>
-          <el-button type="danger" size="small" @click="markAsLost(scope.$index, scope.row)">标记遗失</el-button>
+          <!-- 只有寄存中的记录，才能进行「正常取件」操作 -->
+          <el-button size="small" @click="commonPickup(scope.$index, scope.row)" :disabled="scope.row.status === '寄存中' ? false : true">正常取件</el-button>
+          <!-- 只有已逾期的记录才能进行「逾期取件」操作 -->
+          <el-button type="info" size="small" @click="overduePickup(scope.$index, scope.row)" :disabled="scope.row.status === '已逾期' ? false : true">逾期取件</el-button>
+          <!-- 只有寄存中的记录，才能进行「遗失标记」操作 -->
+          <el-button type="danger" size="small" @click="markAsLost(scope.$index, scope.row)" :disabled="scope.row.status === '寄存中' ? false : true">标记遗失</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <!--分页工具条-->
     <el-col :span="24" class="toolbar">
-      <el-button @click="batchCommonPickup" :disabled="this.sels.length===0">批量正常取件</el-button>
+      <!-- <el-button @click="batchCommonPickup" :disabled="this.sels.length===0">批量正常取件</el-button>
       <el-button type="info" @click="batchOverduePickup" :disabled="this.sels.length===0">批量逾期取件</el-button>
-      <el-button type="danger" @click="batchMarkAsLost" :disabled="this.sels.length===0">批量标记遗失</el-button>
+      <el-button type="danger" @click="batchMarkAsLost" :disabled="this.sels.length===0">批量标记遗失</el-button> -->
       <div style="float: right">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
@@ -117,8 +119,8 @@
         </el-form-item>
         <el-form-item label="行李类型">
           <el-select
-            v-model="addForm.luggageType"
-            value-key="luggageType"
+            v-model="addForm.luggageTypeId"
+            value-key="luggageTypeId"
             clearable
             placeholder="请选择行李类型"
           >
@@ -132,16 +134,16 @@
         </el-form-item>
         <el-form-item label="计费规则">
           <el-select
-            v-model="addForm.calculateRule"
-            value-key="calculateRule"
+            v-model="addForm.calculateRuleId"
+            value-key="calculateRuleId"
             clearable
             placeholder="请选择计费规则"
           >
             <el-option
               v-for="item in calculateRules"
-              :key="item.ruleValue"
+              :key="item.calculateRuleId"
               :label="item.label"
-              :value="item.ruleValue"
+              :value="item.calculateRuleId"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -152,6 +154,15 @@
             name="remark"
             placeholder="备注(行李、日用品之类)"
           ></el-input>
+        </el-form-item>
+        <el-form-item label="开始时间">
+          <el-date-picker
+            v-model="addForm.storageStartTime"
+            type="datetime"
+            placeholder="选择寄存开始时间"
+            align="right"
+            :picker-options="pickerOptions"
+          ></el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间">
           <el-date-picker
@@ -182,32 +193,6 @@ import {
   addmarkLuggageAsLostRecord,
   addOverduePickupRecord
 } from "../../api/api";
-
-// 权限指令
-// Vue.directive("has", {
-//   bind: function(el, binding) {
-//     if (!Vue.prototype.$_has(binding.value)) {
-//       el.parentNode.removeChild(el);
-//     }
-//   }
-// });
-// //权限检查方法
-// Vue.prototype.$_has = function(value) {
-//   // debugger;
-//   let isExist = false;
-//   let buttonpermsStr = sessionStorage.getItem("buttenpremissions");
-//   if (buttonpermsStr == undefined || buttonpermsStr == null) {
-//     return false;
-//   }
-//   let buttonperms = JSON.parse(buttonpermsStr);
-//   for (let i = 0; i < buttonperms.length; i++) {
-//     if (buttonperms[i].perms.indexOf(value) > -1) {
-//       isExist = true;
-//       break;
-//     }
-//   }
-//   return isExist;
-// };
 
 export default {
   data() {
@@ -261,37 +246,37 @@ export default {
       // 计费规则
       calculateRules: [
         {
-          ruleValue: "1",
+          calculateRuleId: "1",
           label: "普通物件-规则1(按小时计费)"
         },
         {
-          ruleValue: "2",
+          calculateRuleId: "2",
           label: "普通物件-规则2(按次数计费)"
         },
         {
-          ruleValue: "3",
+          calculateRuleId: "3",
           label: "易碎物件-规则1(按小时计费)"
         },
         {
-          ruleValue: "4",
+          calculateRuleId: "4",
           label: "易碎物件-规则2(按次数计费)"
         },
         {
-          ruleValue: "5",
+          calculateRuleId: "5",
           label: "贵重物件-规则1(按小时计费)"
         },
         {
-          ruleValue: "6",
+          calculateRuleId: "6",
           label: "贵重物件-规则2(按次数计费)"
         }
       ],
-      ruleValue: "",
+      calculateRuleId: "",
       filters: {
         depositorName: "",
         luggageRecordNo: "",
         depositorPhone: "",
         storageEndTime: "",
-        luggageType: null
+        luggageTypeId: null
       },
       storageRecords: [],
       total: 0,
@@ -310,7 +295,7 @@ export default {
         depositorPhone: [
           { required: true, message: "请输入手机号", trigger: "blur" }
         ],
-        luggageType: [
+        luggageTypeId: [
           { required: true, message: "请选择行李类型", trigger: "blur" }
         ],
         storageEndTime: [
@@ -321,9 +306,10 @@ export default {
       addForm: {
         depositorName: "",
         depositorPhone: "",
-        luggageType: null,
-        calculateRule: null,
+        luggageTypeId: null,
+        calculateRuleId: null,
         remark: "",
+        storageStartTime: "",
         storageEndTime: ""
       }
     };
@@ -391,14 +377,14 @@ export default {
           let para = { luggageIds: row.luggageId };
           addCommonPickupRecord(para).then(res => {
             this.listLoading = false;
-            if (res.data.success) {
+            if (res.success) {
               this.$message({
                 message: "取件成功",
                 type: "success"
               });
             } else {
               this.$message({
-                message: res.data.message,
+                message: res.message,
                 type: "error"
               });
             }
@@ -418,14 +404,14 @@ export default {
           let para = { luggageIds: row.luggageId };
           addOverduePickupRecord(para).then(res => {
             this.listLoading = false;
-            if (res.data.success) {
+            if (res.success) {
               this.$message({
                 message: "逾期取件成功",
                 type: "success"
               });
             } else {
               this.$message({
-                message: res.data.message,
+                message: res.message,
                 type: "error"
               });
             }
@@ -445,14 +431,14 @@ export default {
           let para = { luggageIds: row.luggageId };
           addmarkLuggageAsLostRecord(para).then(res => {
             this.listLoading = false;
-            if (res.data.success) {
+            if (res.success) {
               this.$message({
                 message: "标记遗失成功",
                 type: "success"
               });
             } else {
               this.$message({
-                message: res.data.message,
+                message: res.message,
                 type: "error"
               });
             }
@@ -471,7 +457,6 @@ export default {
         luggageRecordNo: this.filters.luggageRecordNo,
         depositorName: this.filters.depositorName,
         depositorPhone: this.filters.depositorPhone
-        // storageTimeRange: this.filters.storageEndTimeRange
       };
       this.listLoading = true;
       getStorageRecordListPage(para).then(res => {
@@ -482,13 +467,15 @@ export default {
           this.storageRecords = res.data.data.records;
 
           // 如果是已逾期的记录，则不能进行「正常取件」操作
-          // for (let element = 0; element < this.storageRecords.size; element++) {
-          //   if ("已逾期" === this.storageRecords[element].status) {
-          //     this.enable = true;
-          //   } else {
-          //     this.enable = false;
-          //   }
-          // }
+          // debugger
+          for (let element = 0; element < this.storageRecords.size; element++) {
+            console.log("行李寄存状态：" + this.storageRecords[element].status)
+            if ("已逾期" === this.storageRecords[element].status) {
+              this.enableCommon = true;
+            } else {
+              this.enableCommon = false;
+            }
+          }
           this.listLoading = false;
           // this.$message({
           //   // message: res.data.message,
@@ -510,9 +497,10 @@ export default {
       this.addForm = {
         depositorName: "",
         depositorPhone: "",
-        luggageType: null,
-        calculateRule: null,
+        luggageTypeId: null,
+        calculateRuleId: null,
         remark: "",
+        storageStartTime: "",
         storageEndTime: ""
       };
     },
@@ -523,19 +511,49 @@ export default {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
             this.addLoading = true;
-            //NProgress.start();
             let para = Object.assign({}, this.addForm);
-            if (para.luggageType === "普通物件") {
-              para.luggageType = 1;
-            } else if (para.luggageType === "易碎物件") {
-              para.admiluggageTypenType = 2;
-            } else if (para.luggageType === "贵重物件") {
-              para.luggageType = 3;
+            if (para.luggageTypeId === "普通物件") {
+              para.luggageTypeId = 1;
+            } else if (para.luggageTypeId === "易碎物件") {
+              para.luggageTypeId = 2;
+            } else if (para.luggageTypeId === "贵重物件") {
+              para.luggageTypeId = 3;
             }
+
+            if (para.calculateRuleId === "普通物件-规则1(按小时计费)") {
+              para.calculateRuleId = 1;
+            } else if (para.calculateRuleId === "普通物件-规则2(按次数计费)") {
+              para.calculateRuleId = 2;
+            } else if (para.calculateRuleId === "易碎物件-规则1(按小时计费)") {
+              para.calculateRuleId = 3;
+            } else if (para.calculateRuleId === "易碎物件-规则2(按次数计费)") {
+              para.calculateRuleId = 4;
+            } else if (para.calculateRuleId === "贵重物件-规则1(按小时计费)") {
+              para.calculateRuleId = 5;
+            } else if (para.calculateRuleId === "贵重物件-规则2(按次数计费)") {
+              para.calculateRuleId = 6;
+            }
+
             delete para.luggageId;
             delete para.luggageRecordNo;
             delete para.gmtCreate;
             delete para.gmtModified;
+
+            // 日期格式转换
+            para.storageStartTime =
+              !para.storageStartTime || para.storageStartTime == ""
+                ? ""
+                : util.formatDate.format(
+                    new Date(para.storageStartTime),
+                    "yyyy-MM-dd hh:mm:ss"
+                  );
+            para.storageEndTime =
+              !para.storageEndTime || para.storageEndTime == ""
+                ? ""
+                : util.formatDate.format(
+                    new Date(para.storageEndTime),
+                    "yyyy-MM-dd hh:mm:ss"
+                  );                  
             addLuggageStorageRecord(para).then(res => {
               this.addLoading = false;
               //NProgress.done();

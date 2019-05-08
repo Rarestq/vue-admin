@@ -4,47 +4,40 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.adminName" placeholder="管理员姓名(完整)" clearable></el-input>
+          <el-input v-model="filters.depositorName" placeholder="寄存人姓名(模糊查询)" clearable></el-input>
         </el-form-item>
-        <el-select v-model="filters.luggageTypeId" clearable placeholder="行李类型">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
         <el-form-item label="日期">
           <el-date-picker
-            v-model="filters.gmtCreate"
+            v-model="filters.pickupTime"
             align="right"
             type="datetime"
-            placeholder="选择日期(某一天)"
+            placeholder="取件日期"
             :picker-options="pickerOptions"
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="getTurnoverRecords">查询</el-button>
+          <el-button type="primary" v-on:click="getPickupLuggageRecords">查询</el-button>
         </el-form-item>
       </el-form>
     </el-col>
 
     <!--列表-->
     <el-table
-      :data="turnoverRecords"
+      :data="pickupRecords"
       highlight-current-row
       v-loading="listLoading"
       style="width: 100%;"
     >
       <el-table-column type="index" width="60"></el-table-column>
-      <el-table-column prop="turnoverRecordId" label="营业额记录表主键id" width="80" v-if="false"></el-table-column>
-      <el-table-column prop="luggageId" label="行李寄存记录id" width="80" v-if="false"></el-table-column>
-      <el-table-column prop="adminId" label="管理员id" width="100" v-if="false"></el-table-column>
-      <el-table-column prop="adminName" label="管理员姓名" width="180"></el-table-column>
-      <el-table-column prop="luggageType" label="行李类型" width="120"></el-table-column>
-      <el-table-column prop="calculationRuleId" label="计费规则主键id" width="80" v-if="false"></el-table-column>
-      <el-table-column prop="fee" label="费用" width="120"></el-table-column>
-      <el-table-column prop="gmtCreate" label="创建时间" :formatter="dateFormat" min-width="180"></el-table-column>
+      <el-table-column prop="pickupLuggageRecordId" label="行李取件记录主键id" width="80" v-if="false"></el-table-column>
+      <el-table-column prop="pickupRecordNo" label="取件记录编号" width="180"></el-table-column>
+      <el-table-column prop="luggageId" label="行李寄存主键id" width="80" v-if="false"></el-table-column>
+      <el-table-column prop="adminId" label="管理员id" width="80" v-if="false"></el-table-column>
+      <el-table-column prop="adminName" label="管理员姓名" width="120"></el-table-column>
+      <el-table-column prop="pickerName" label="取件人姓名" width="120"></el-table-column>
+      <el-table-column prop="pickerPhone" label="取件人电话" width="130"></el-table-column>
+      <el-table-column prop="pickupType" label="取件类型" width="120"></el-table-column>
+      <el-table-column prop="pickUpTime" label="取件时间" :formatter="dateFormat" min-width="180"></el-table-column>
       <el-table-column prop="gmtModified" label="修改时间" :formatter="dateFormat" min-width="180"></el-table-column>
     </el-table>
 
@@ -70,9 +63,7 @@
 import util from "../../common/js/util";
 import moment from "moment";
 import {
-  getTurnoverRecordListPage,
-  getTurnoverRecordPair,
-  statisticsTotalTurnover
+  getPickupLuggageRecordListPage
 } from "../../api/api";
 
 export default {
@@ -108,27 +99,11 @@ export default {
         ]
       },
       dateValue: "",
-      options: [
-        {
-          value: "1",
-          label: "普通物件"
-        },
-        {
-          value: "2",
-          label: "易碎物件"
-        },
-        {
-          value: "3",
-          label: "贵重物件"
-        }
-      ],
-      value: "",
       filters: {
-        adminName: "",
-        luggageTypeId: null,
-        gmtCreate: ""
+        depositorName: "",
+        pickupTime: ""
       },
-      turnoverRecords: [],
+      pickupRecords: [],
       total: 0,
       pages: 1,
       pageSize: 10,
@@ -151,36 +126,35 @@ export default {
     // 分页
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.getTurnoverRecords();
+      this.getPickupLuggageRecords();
     },
 
     // 显示条数变化
     handleSizeChange(val) {
       this.pageSize = val;
-      this.getTurnoverRecords();
+      this.getPickupLuggageRecords();
     },
 
-    // 获取营业额记录列表
-    getTurnoverRecords() {
+    // 获取取件记录列表
+    getPickupLuggageRecords() {
       let para = {
         current: this.currentPage,
         size: this.pageSize,
-        luggageTypeId: this.filters.luggageTypeId,
-        adminName: this.filters.adminName,
-        gmtCreate: this.filters.gmtCreate
+        depositorName: this.filters.depositorName,
+        pickupTime: this.filters.pickupTime
       };
       this.listLoading = true;
       // 前台时间字符串传到后台只能以 yyyy-MM-dd hh:mm:ss 格式
-      para.gmtCreate =
-        !para.gmtCreate || para.gmtCreate == ""
+      para.pickupTime =
+        !para.pickupTime || para.pickupTime == ""
           ? ""
-          : util.formatDate.format(new Date(para.gmtCreate), "yyyy-MM-dd hh:mm:ss");
-      getTurnoverRecordListPage(para).then(res => {
+          : util.formatDate.format(new Date(para.pickupTime), "yyyy-MM-dd hh:mm:ss");
+      getPickupLuggageRecordListPage(para).then(res => {
         if (res.data.success) {
           this.total = res.data.data.total;
           this.pages = res.data.data.pages;
           this.pageSize = res.data.data.size;
-          this.turnoverRecords = res.data.data.records;
+          this.pickupRecords = res.data.data.records;
           this.listLoading = false;
         //   this.$message({
         //     // message: res.data.message,
@@ -197,7 +171,7 @@ export default {
     }
   },
   mounted() {
-    this.getTurnoverRecords();
+    this.getPickupLuggageRecords();
   }
 };
 </script>
