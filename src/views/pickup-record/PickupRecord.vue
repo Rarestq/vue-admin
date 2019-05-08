@@ -182,10 +182,11 @@ export default {
           this.pageSize = res.data.data.size;
           this.turnoverRecords = res.data.data.records;
           this.listLoading = false;
-          this.$message({
-            message: res.data.message,
-            type: "success"
-          });
+        //   this.$message({
+        //     // message: res.data.message,
+        //     message: '查询成功',
+        //     type: "success"
+        //   });
         } else {
           this.$message({
             message: res.data.message,

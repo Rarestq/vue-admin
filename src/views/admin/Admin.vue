@@ -297,11 +297,12 @@ export default {
           this.pageSize = res.data.data.size;
           this.users = res.data.data.records;
           this.listLoading = false;
-          this.$message({
-            // 后台返回的操作结果
-            message: res.data.message,
-            type: "success"
-          });
+          // this.$message({
+          //   // 后台返回的操作结果
+          //   // message: res.data.message,
+          //   message: '查询成功',
+          //   type: "success"
+          // });
         } else {
           this.$message({
             message: res.data.message,
@@ -416,7 +417,8 @@ export default {
             this.listLoading = false;
             if (res.data.success) {
               this.$message({
-                message: res.data.message,
+                // message: res.data.message,
+                message: "删除成功",
                 type: "success"
               });
             } else {
@@ -439,13 +441,13 @@ export default {
       })
         .then(() => {
           this.listLoading = true;
-          //NProgress.start();
           let para = { adminIds: ids };
           batchRemoveAdmin(para).then(res => {
             this.listLoading = false;
             if (res.data.success) {
               this.$message({
-                message: res.data.message,
+                // message: res.data.message,
+                message: "删除成功",
                 type: "success"
               });
             } else {

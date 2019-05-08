@@ -38,9 +38,10 @@
       :data="storageRecords"
       highlight-current-row
       v-loading="listLoading"
+      @selection-change="selsChange"
       style="width: 100%;"
     >
-      <!-- <el-table-column type="selection" width="55"></el-table-column> -->
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="index" width="60"></el-table-column>
       <el-table-column prop="luggageId" label="行李寄存记录id" width="80" v-if="false"></el-table-column>
       <el-table-column prop="luggageRecordNo" label="寄存记录编号" width="180" sortable></el-table-column>
@@ -78,6 +79,9 @@
 
     <!--分页工具条-->
     <el-col :span="24" class="toolbar">
+      <el-button @click="batchCommonPickup" :disabled="this.sels.length===0">批量正常取件</el-button>
+      <el-button type="info" @click="batchOverduePickup" :disabled="this.sels.length===0">批量逾期取件</el-button>
+      <el-button type="danger" @click="batchMarkAsLost" :disabled="this.sels.length===0">批量标记遗失</el-button>
       <div style="float: right">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
@@ -348,19 +352,114 @@ export default {
       this.getLuggageStorageRecords();
     },
 
-    // 正常取件
-    commonPickup(val) {
+    // 批量正常取件
+    // batchCommonPickup: function() {
+    //   var ids = this.sels.map(item => item.adminId).toString();
+    //   this.$confirm("确认对选中记录进行正常取件操作吗？", "提示", {
+    //     type: "info"
+    //   })
+    //     .then(() => {
+    //       this.listLoading = true;
+    //       //NProgress.start();
+    //       let para = { adminIds: ids };
+    //       addCommonPickupRecord(para).then(res => {
+    //         this.listLoading = false;
+    //         if (res.data.success) {
+    //           this.$message({
+    //             message: res.data.message,
+    //             type: "success"
+    //           });
+    //         } else {
+    //           this.$message({
+    //             message: res.data.message,
+    //             type: "error"
+    //           });
+    //         }
+    //         this.getAdmins();
+    //       });
+    //     })
+    //     .catch(() => {});
+    // },
 
+    // 正常取件
+    commonPickup: function(index, row) {
+      this.$confirm("确认取件吗?", "提示", {
+        type: "info"
+      })
+        .then(() => {
+          this.listLoading = true;
+          let para = { luggageIds: row.luggageId };
+          addCommonPickupRecord(para).then(res => {
+            this.listLoading = false;
+            if (res.data.success) {
+              this.$message({
+                message: "取件成功",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.data.message,
+                type: "error"
+              });
+            }
+            this.getLuggageStorageRecords();
+          });
+        })
+        .catch(() => {});
     },
 
     // 逾期取件
-    overduePickup() {
-
+    overduePickup: function(index, row) {
+      this.$confirm("确认进行逾期取件？", "提示", {
+        type: "info"
+      })
+        .then(() => {
+          this.listLoading = true;
+          let para = { luggageIds: row.luggageId };
+          addOverduePickupRecord(para).then(res => {
+            this.listLoading = false;
+            if (res.data.success) {
+              this.$message({
+                message: "逾期取件成功",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.data.message,
+                type: "error"
+              });
+            }
+            this.getLuggageStorageRecords();
+          });
+        })
+        .catch(() => {});
     },
 
     // 标记遗失
-    markAsLost() {
-
+    markAsLost: function(index, row) {
+      this.$confirm("确认标记该记录为遗失状态？", "提示", {
+        type: "warn"
+      })
+        .then(() => {
+          this.listLoading = true;
+          let para = { luggageIds: row.luggageId };
+          addmarkLuggageAsLostRecord(para).then(res => {
+            this.listLoading = false;
+            if (res.data.success) {
+              this.$message({
+                message: "标记遗失成功",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.data.message,
+                type: "error"
+              });
+            }
+            this.getLuggageStorageRecords();
+          });
+        })
+        .catch(() => {});
     },
 
     // 获取行李寄存记录列表
@@ -391,10 +490,11 @@ export default {
           //   }
           // }
           this.listLoading = false;
-          this.$message({
-            message: res.data.message,
-            type: "success"
-          });
+          // this.$message({
+          //   // message: res.data.message,
+          //   message: '查询成功',
+          //   type: "success"
+          // });
         } else {
           this.$message({
             message: res.data.message,
@@ -450,10 +550,11 @@ export default {
           });
         }
       });
+    },
+
+    selsChange: function(sels) {
+      this.sels = sels;
     }
-    // selsChange: function(sels) {
-    //   this.sels = sels;
-    // }
   },
   mounted() {
     this.getLuggageStorageRecords();

@@ -54,10 +54,10 @@ export default {
         if (res.data.success) {
           this.calculateRules = res.data.data;
           this.listLoading = false;
-          this.$message({
-            message: res.data.message,
-            type: "success"
-          });
+          // this.$message({
+          //   message: res.data.message,
+          //   type: "success"
+          // });
         } else {
           this.$message({
             message: res.data.message,
