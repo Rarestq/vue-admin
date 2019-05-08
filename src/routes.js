@@ -11,6 +11,8 @@ import LuggageType from './views/luggage-type/LuggageType.vue'
 import Turnover from './views/turnover-record/Turnover.vue'
 import OverdueRecord from './views/overdue-record/OverdueRecord.vue'
 import PickupRecord from './views/pickup-record/PickupRecord.vue'
+import CompensateRecord from './views/compensate-record/CompensateRecord.vue'
+import LostRegisterRecord from './views/lost-register-record/LostRegisterRecord.vue'
 import echarts from './views/charts/echarts.vue'
 
 let routes = [
@@ -35,7 +37,7 @@ let routes = [
         children: [
             { path: '/main', component: Main, name: '主页', hidden: true },
             { path: '/admin', component: Admin, name: '管理员信息' },
-            { path: '/rule', component: ChargeRule, name: '计费规则信息' },
+            // { path: '/rule', component: ChargeRule, name: '计费规则信息' },
         ]
     },
     {
@@ -44,9 +46,9 @@ let routes = [
         name: '行李寄存模块',
         iconCls: 'fa fa-id-card-o',
         children: [
+            { path: '/storage', component: LuggageStorage, name: '行李寄存记录' },
             { path: '/page4', component: Page4, name: '页面4' },
-            { path: '/page5', component: Page5, name: '页面5' },
-            { path: '/storage', component: LuggageStorage, name: '行李寄存记录' }
+            { path: '/page5', component: Page5, name: '页面5' }
         ]
     },
     {
@@ -64,9 +66,31 @@ let routes = [
         name: '行李逾期未取清理模块',
         iconCls: 'fa fa-id-card-o',
         children: [
+            { path: '/overdue', component: OverdueRecord, name: '行李逾期记录' },
             { path: '/page4', component: Page4, name: '页面4' },
-            { path: '/page5', component: Page5, name: '页面5' },
-            { path: '/overdue', component: OverdueRecord, name: '行李逾期记录' }
+            { path: '/page5', component: Page5, name: '页面5' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '行李遗失登记模块',
+        iconCls: 'fa fa-id-card-o',
+        children: [
+            { path: '/register', component: LostRegisterRecord, name: '行李遗失登记记录' },
+            { path: '/page4', component: Page4, name: '页面4' },
+            { path: '/page5', component: Page5, name: '页面5' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '行李遗失赔偿模块',
+        iconCls: 'fa fa-id-card-o',
+        children: [
+            { path: '/compensate', component: CompensateRecord, name: '行李遗失赔偿记录' },
+            { path: '/page4', component: Page4, name: '页面4' },
+            { path: '/page5', component: Page5, name: '页面5' }
         ]
     },
     {
