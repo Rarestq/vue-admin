@@ -4,7 +4,7 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.adminName" placeholder="管理员姓名" clearable></el-input>
+          <el-input v-model="filters.adminName" placeholder="管理员姓名(完整)" clearable></el-input>
         </el-form-item>
         <el-select v-model="filters.luggageTypeId" clearable placeholder="行李类型">
           <el-option
@@ -18,7 +18,7 @@
           <el-date-picker
             v-model="filters.gmtCreate"
             align="right"
-            type="date"
+            type="datetime"
             placeholder="选择日期(某一天)"
             :picker-options="pickerOptions"
           ></el-date-picker>
@@ -168,10 +168,11 @@ export default {
         gmtCreate: this.filters.gmtCreate
       };
       this.listLoading = true;
+      // 前台时间字符串传到后台只能以 yyyy-MM-dd hh:mm:ss 格式
       para.gmtCreate =
-              !para.gmtCreate || para.gmtCreate == ""
-                ? ""
-                : util.formatDate.format(new Date(para.gmtCreate), "yyyy-MM-dd");
+        !para.gmtCreate || para.gmtCreate == ""
+          ? ""
+          : util.formatDate.format(new Date(para.gmtCreate), "yyyy-MM-dd hh:mm:ss");
       getTurnoverRecordListPage(para).then(res => {
         if (res.data.success) {
           this.total = res.data.data.total;

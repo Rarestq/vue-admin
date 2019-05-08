@@ -10,6 +10,7 @@
     >
       <el-table-column type="index" width="60"></el-table-column>
       <el-table-column prop="calculationRuleId" label="计费规则主键id" width="120" v-if="false"></el-table-column>
+      <el-table-column prop="calculateRuleDesc" label="描述" width="180"></el-table-column>
       <el-table-column prop="luggageType" label="行李类型" width="180"></el-table-column>
       <el-table-column prop="calculationUnits" label="计费单位" width="180"></el-table-column>
       <el-table-column prop="feePerUnit" label="单位金额" width="180"></el-table-column>
