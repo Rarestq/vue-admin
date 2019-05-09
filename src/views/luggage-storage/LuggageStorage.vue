@@ -101,6 +101,13 @@
     <!--新增界面-->
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+        <el-form-item label="管理员姓名" v-if="false">
+          <el-input
+            v-model="addForm.adminName"
+            auto-complete="off"
+            name="adminName"
+          ></el-input>
+        </el-form-item>
         <el-form-item label="姓名">
           <el-input
             v-model="addForm.depositorName"
@@ -197,6 +204,7 @@ import {
 export default {
   data() {
     return {
+      adminName: this.adminName,
       // 日期类型
       pickerOptions: {
         shortcuts: [
@@ -304,6 +312,7 @@ export default {
       },
       // 新增界面数据
       addForm: {
+        adminName: this.adminName,
         depositorName: "",
         depositorPhone: "",
         luggageTypeId: null,
@@ -466,16 +475,6 @@ export default {
           this.pageSize = res.data.data.size;
           this.storageRecords = res.data.data.records;
 
-          // 如果是已逾期的记录，则不能进行「正常取件」操作
-          // debugger
-          for (let element = 0; element < this.storageRecords.size; element++) {
-            console.log("行李寄存状态：" + this.storageRecords[element].status)
-            if ("已逾期" === this.storageRecords[element].status) {
-              this.enableCommon = true;
-            } else {
-              this.enableCommon = false;
-            }
-          }
           this.listLoading = false;
           // this.$message({
           //   // message: res.data.message,
@@ -484,7 +483,7 @@ export default {
           // });
         } else {
           this.$message({
-            message: res.data.message,
+            message: res.message,
             type: "error"
           });
         }
@@ -495,6 +494,7 @@ export default {
     handleAdd: function() {
       this.addFormVisible = true;
       this.addForm = {
+        adminName: this.adminName,
         depositorName: "",
         depositorPhone: "",
         luggageTypeId: null,
@@ -576,6 +576,12 @@ export default {
   },
   mounted() {
     this.getLuggageStorageRecords();
+    var user = sessionStorage.getItem("user");
+    if (user) {
+	  user = JSON.parse(user);
+	  console.log("当前登录人:" + user)
+      this.adminName = user || "";
+    }
   }
 };
 </script>

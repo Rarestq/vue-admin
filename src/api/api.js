@@ -1,11 +1,12 @@
 import axios from 'axios';
 
 let base = 'http://localhost:8099/luggage_storage/api';
+axios.defaults.withCredentials = true; // 让ajax携带cookie
 
 // 登录相关接口
 export const requestLogin = params => { return axios.post(`${base}/login/login`, params).then(res => res.data); };
 
- // 管理员相关接口
+// 管理员相关接口
 export const getAdminListPage = params => { return axios.get(`${base}/admin`, { params: params }); };
 export const removeAdmin = params => { return axios.post(`${base}/admin/delete`, params).then(res => res.data); };
 export const batchRemoveAdmin = params => { return axios.post(`${base}/admin/delete`, params).then(res => res.data); };

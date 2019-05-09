@@ -4,9 +4,12 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.adminName" placeholder="管理员姓名(完整)" clearable></el-input>
+          <el-input v-model="filters.depositorName" placeholder="丢失人姓名(模糊查询)" clearable></el-input>
         </el-form-item>
-        <el-select v-model="filters.luggageTypeId" clearable placeholder="行李类型">
+         <el-form-item>
+          <el-input v-model="filters.depositorPhone" placeholder="丢失人电话(模糊查询)" clearable></el-input>
+        </el-form-item>
+        <el-select v-model="filters.lostTime" clearable placeholder="登记时间">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -24,30 +27,38 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" v-on:click="getTurnoverRecords">查询</el-button>
+          <el-button type="primary" v-on:click="getlostRegisterRecords">查询</el-button>
         </el-form-item>
       </el-form>
     </el-col>
 
     <!--列表-->
     <el-table
-      :data="turnoverRecords"
+      :data="lostRegisterRecords"
       highlight-current-row
       v-loading="listLoading"
       style="width: 100%;"
     >
       <el-table-column type="index" width="60"></el-table-column>
-      <el-table-column prop="turnoverRecordId" label="营业额记录表主键id" width="80" v-if="false"></el-table-column>
-      <el-table-column prop="luggageId" label="行李寄存记录id" width="80" v-if="false"></el-table-column>
-      <el-table-column prop="adminId" label="管理员id" width="100" v-if="false"></el-table-column>
+      <el-table-column prop="lostRegistrationRecordId" label="行李遗失登记主键id" width="80" v-if="false"></el-table-column>
+      <el-table-column prop="registerRecordNo" label="遗失登记编号" width="160"></el-table-column>
+      <el-table-column prop="adminId" label="管理员id" width="80" v-if="false"></el-table-column>
       <el-table-column prop="adminName" label="管理员姓名" width="120"></el-table-column>
+      <el-table-column prop="luggageId" label="行李寄存主键id" width="80" v-if="false"></el-table-column>
+      <el-table-column prop="luggageRecordNo" label="寄存记录编号" width="160"></el-table-column>
       <el-table-column prop="luggageType" label="行李类型" width="120"></el-table-column>
-      <el-table-column prop="calculationRuleId" label="计费规则主键id" width="80" v-if="false"></el-table-column>
-      <el-table-column prop="fee" label="费用" width="120"></el-table-column>
+      <el-table-column prop="depositorName" label="登记人姓名" width="120"></el-table-column>
+      <el-table-column prop="depositorPhone" label="登记人电话" width="130"></el-table-column>
       <el-table-column prop="remark" label="备注" width="150"></el-table-column>
-      <el-table-column prop="gmtCreate" label="创建时间" :formatter="dateFormat" min-width="180"></el-table-column>
+      <el-table-column prop="gmtCreate" label="登记时间" :formatter="dateFormat" min-width="180"></el-table-column>
       <el-table-column prop="gmtModified" label="修改时间" :formatter="dateFormat" min-width="180"></el-table-column>
+      <el-table-column label="操作" width="120">
+        <template slot-scope="scope">
+          <el-button type="danger" size="small" @click="compensate(scope.$index, scope.row)">进行赔偿</el-button>
+        </template>
+      </el-table-column>
     </el-table>
+    
 
     <!--分页工具条-->
     <el-col :span="24" class="toolbar">
@@ -71,9 +82,8 @@
 import util from "../../common/js/util";
 import moment from "moment";
 import {
-  getTurnoverRecordListPage,
-  getTurnoverRecordPair,
-  statisticsTotalTurnover
+  getLostRegisterRecordListPage,
+  addLostCompensateRecord
 } from "../../api/api";
 
 export default {
@@ -129,7 +139,7 @@ export default {
         luggageTypeId: null,
         gmtCreate: ""
       },
-      turnoverRecords: [],
+      lostRegisterRecords: [],
       total: 0,
       pages: 1,
       pageSize: 10,
@@ -140,7 +150,6 @@ export default {
   methods: {
     // 时间格式化
     dateFormat: function(row, column) {
-      // console.log(row, column);
       const date = row[column.property];
       if (date === undefined) {
         return "";
@@ -152,17 +161,44 @@ export default {
     // 分页
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.getTurnoverRecords();
+      this.getlostRegisterRecords();
     },
 
     // 显示条数变化
     handleSizeChange(val) {
       this.pageSize = val;
-      this.getTurnoverRecords();
+      this.getlostRegisterRecords();
     },
 
-    // 获取营业额记录列表
-    getTurnoverRecords() {
+    // 对行李进行赔偿
+    compensate: function(index, row) {
+      this.$confirm("确认进行赔偿吗?", "提示", {
+        type: "info"
+      })
+        .then(() => {
+          this.listLoading = true;
+          let para = { recordIds: row.lostRegistrationRecordId };
+          addLostCompensateRecord(para).then(res => {
+            this.listLoading = false;
+            if (res.success) {
+              this.$message({
+                message: "赔偿成功",
+                type: "success"
+              });
+            } else {
+              this.$message({
+                message: res.message,
+                type: "error"
+              });
+            }
+            this.getlostRegisterRecords();
+          });
+        })
+        .catch(() => {});
+    },
+
+    // 获取赔偿记录列表
+    getlostRegisterRecords() {
       let para = {
         current: this.currentPage,
         size: this.pageSize,
@@ -175,13 +211,16 @@ export default {
       para.gmtCreate =
         !para.gmtCreate || para.gmtCreate == ""
           ? ""
-          : util.formatDate.format(new Date(para.gmtCreate), "yyyy-MM-dd hh:mm:ss");
-      getTurnoverRecordListPage(para).then(res => {
+          : util.formatDate.format(
+              new Date(para.gmtCreate),
+              "yyyy-MM-dd hh:mm:ss"
+            );
+      getLostRegisterRecordListPage(para).then(res => {
         if (res.data.success) {
           this.total = res.data.data.total;
           this.pages = res.data.data.pages;
           this.pageSize = res.data.data.size;
-          this.turnoverRecords = res.data.data.records;
+          this.lostRegisterRecords = res.data.data.records;
           this.listLoading = false;
           // this.$message({
           //   // message: res.data.message,
@@ -198,7 +237,7 @@ export default {
     }
   },
   mounted() {
-    this.getTurnoverRecords();
+    this.getlostRegisterRecords();
   }
 };
 </script>

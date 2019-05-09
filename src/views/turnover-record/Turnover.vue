@@ -40,11 +40,11 @@
       <el-table-column prop="turnoverRecordId" label="营业额记录表主键id" width="80" v-if="false"></el-table-column>
       <el-table-column prop="luggageId" label="行李寄存记录id" width="80" v-if="false"></el-table-column>
       <el-table-column prop="adminId" label="管理员id" width="100" v-if="false"></el-table-column>
-      <el-table-column prop="adminName" label="管理员姓名" width="120"></el-table-column>
+      <el-table-column prop="adminName" label="管理员姓名" width="100"></el-table-column>
       <el-table-column prop="luggageType" label="行李类型" width="120"></el-table-column>
       <el-table-column prop="calculationRuleId" label="计费规则主键id" width="80" v-if="false"></el-table-column>
       <el-table-column prop="fee" label="费用" width="120"></el-table-column>
-      <el-table-column prop="remark" label="备注" width="150"></el-table-column>
+      <el-table-column prop="remark" label="备注" width="360"></el-table-column>
       <el-table-column prop="gmtCreate" label="创建时间" :formatter="dateFormat" min-width="180"></el-table-column>
       <el-table-column prop="gmtModified" label="修改时间" :formatter="dateFormat" min-width="180"></el-table-column>
     </el-table>
