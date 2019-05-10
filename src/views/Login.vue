@@ -61,14 +61,18 @@ export default {
       requestLogin(loginParams).then(res => {
         this.logining = false;
         let records = res.data;
-        if (!res.success) {
+        console.log("登录信息:" + res.message);
+        if (res.status == 200) {
+          sessionStorage.setItem(
+            "user",
+            JSON.stringify(this.ruleForm2.account)
+          );
+          this.$router.push({ path: "/echarts" });
+        } else {
           this.$message({
             message: res.message,
             type: "error"
           });
-        } else {
-          sessionStorage.setItem("user", JSON.stringify(this.ruleForm2.account));
-          this.$router.push({ path: "/echarts" });
         }
       });
     }
