@@ -58,8 +58,8 @@
       ></el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)" v-if="filters.adminType === '超级管理员' ? false : true">编辑</el-button>
+          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" v-if="filters.adminType === '超级管理员' ? false : true">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

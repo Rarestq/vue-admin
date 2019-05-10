@@ -7,9 +7,9 @@
           <el-input v-model="filters.depositorName" placeholder="丢失人姓名(模糊查询)" clearable></el-input>
         </el-form-item>
          <el-form-item>
-          <el-input v-model="filters.depositorPhone" placeholder="丢失人电话(模糊查询)" clearable></el-input>
+          <el-input v-model="filters.lostRecordNo" placeholder="遗失登记编号(模糊查询)" clearable></el-input>
         </el-form-item>
-        <el-select v-model="filters.lostTime" clearable placeholder="登记时间">
+        <el-select v-model="filters.status" clearable placeholder="记录状态">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -17,15 +17,6 @@
             :value="item.value"
           ></el-option>
         </el-select>
-        <el-form-item label="日期">
-          <el-date-picker
-            v-model="filters.gmtCreate"
-            align="right"
-            type="datetime"
-            placeholder="选择日期(某一天)"
-            :picker-options="pickerOptions"
-          ></el-date-picker>
-        </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="getlostRegisterRecords">查询</el-button>
         </el-form-item>
@@ -45,16 +36,17 @@
       <el-table-column prop="adminId" label="管理员id" width="80" v-if="false"></el-table-column>
       <el-table-column prop="adminName" label="管理员姓名" width="120"></el-table-column>
       <el-table-column prop="luggageId" label="行李寄存主键id" width="80" v-if="false"></el-table-column>
-      <el-table-column prop="luggageRecordNo" label="寄存记录编号" width="160"></el-table-column>
+      <el-table-column prop="luggageRecordNo" label="寄存记录编号" width="250"></el-table-column>
       <el-table-column prop="luggageType" label="行李类型" width="120"></el-table-column>
-      <el-table-column prop="depositorName" label="登记人姓名" width="120"></el-table-column>
-      <el-table-column prop="depositorPhone" label="登记人电话" width="130"></el-table-column>
+      <el-table-column prop="depositorName" label="丢失人姓名" width="120"></el-table-column>
+      <el-table-column prop="depositorPhone" label="丢失人电话" width="130"></el-table-column>
+      <el-table-column prop="status" label="记录状态" width="130"></el-table-column>
       <el-table-column prop="remark" label="备注" width="150"></el-table-column>
       <el-table-column prop="gmtCreate" label="登记时间" :formatter="dateFormat" min-width="180"></el-table-column>
       <el-table-column prop="gmtModified" label="修改时间" :formatter="dateFormat" min-width="180"></el-table-column>
       <el-table-column label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="compensate(scope.$index, scope.row)">进行赔偿</el-button>
+          <el-button type="danger" size="small" @click="compensate(scope.$index, scope.row)" :disabled="scope.row.status === '已遗失' ? false : true">进行赔偿</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,55 +81,21 @@ import {
 export default {
   data() {
     return {
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        },
-        shortcuts: [
-          {
-            text: "今天",
-            onClick(picker) {
-              picker.$emit("pick", new Date());
-            }
-          },
-          {
-            text: "昨天",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit("pick", date);
-            }
-          },
-          {
-            text: "一周前",
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", date);
-            }
-          }
-        ]
-      },
-      dateValue: "",
       options: [
         {
+          value: "0",
+          label: "已遗失"
+        },
+        {
           value: "1",
-          label: "普通物件"
-        },
-        {
-          value: "2",
-          label: "易碎物件"
-        },
-        {
-          value: "3",
-          label: "贵重物件"
+          label: "已赔偿"
         }
       ],
       value: "",
       filters: {
-        adminName: "",
-        luggageTypeId: null,
-        gmtCreate: ""
+        depositorName: "",
+        lostRecordNo: "",
+        status: null
       },
       lostRegisterRecords: [],
       total: 0,
@@ -177,7 +135,7 @@ export default {
       })
         .then(() => {
           this.listLoading = true;
-          let para = { recordIds: row.lostRegistrationRecordId };
+          let para = { lostRegistRecordIds: row.lostRegistrationRecordId };
           addLostCompensateRecord(para).then(res => {
             this.listLoading = false;
             if (res.success) {
@@ -202,19 +160,11 @@ export default {
       let para = {
         current: this.currentPage,
         size: this.pageSize,
-        luggageTypeId: this.filters.luggageTypeId,
-        adminName: this.filters.adminName,
-        gmtCreate: this.filters.gmtCreate
+        depositorName: this.filters.depositorName,
+        lostRecordNo: this.filters.lostRecordNo,
+        status: this.filters.status
       };
       this.listLoading = true;
-      // 前台时间字符串传到后台只能以 yyyy-MM-dd hh:mm:ss 格式
-      para.gmtCreate =
-        !para.gmtCreate || para.gmtCreate == ""
-          ? ""
-          : util.formatDate.format(
-              new Date(para.gmtCreate),
-              "yyyy-MM-dd hh:mm:ss"
-            );
       getLostRegisterRecordListPage(para).then(res => {
         if (res.data.success) {
           this.total = res.data.data.total;

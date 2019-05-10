@@ -37,7 +37,8 @@ let routes = [
         children: [
             { path: '/main', component: Main, name: '主页', hidden: true },
             { path: '/admin', component: Admin, name: '管理员信息' },
-            // { path: '/rule', component: ChargeRule, name: '计费规则信息' },
+            { path: '/rule', component: ChargeRule, name: '计费规则信息' },
+            { path: '/luggage_type', component: LuggageType, name: '行李类型' }
         ]
     },
     {
@@ -47,8 +48,6 @@ let routes = [
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/storage', component: LuggageStorage, name: '行李寄存记录' },
-            { path: '/page4', component: Page4, name: '页面4' },
-            { path: '/page5', component: Page5, name: '页面5' }
         ]
     },
     {
@@ -67,8 +66,6 @@ let routes = [
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/overdue', component: OverdueRecord, name: '行李逾期记录' },
-            { path: '/page4', component: Page4, name: '页面4' },
-            { path: '/page5', component: Page5, name: '页面5' }
         ]
     },
     {
@@ -78,8 +75,6 @@ let routes = [
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/register', component: LostRegisterRecord, name: '行李遗失登记记录' },
-            { path: '/page4', component: Page4, name: '页面4' },
-            { path: '/page5', component: Page5, name: '页面5' }
         ]
     },
     {
@@ -89,17 +84,6 @@ let routes = [
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/compensate', component: CompensateRecord, name: '行李遗失赔偿记录' },
-            { path: '/page4', component: Page4, name: '页面4' },
-            { path: '/page5', component: Page5, name: '页面5' }
-        ]
-    },
-    {
-        path: '/',
-        component: Home,
-        name: 'Charts',
-        iconCls: 'fa fa-bar-chart',
-        children: [
-            { path: '/echarts', component: echarts, name: 'echarts' }
         ]
     },
     {
@@ -116,23 +100,32 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '行李类型',
-        iconCls: 'fa fa-address-card',
-        leaf: true,//只有一个节点
+        name: 'Charts',
+        iconCls: 'fa fa-bar-chart',
         children: [
-            { path: '/luggage_type', component: LuggageType, name: '行李类型' }
+            { path: '/echarts', component: echarts, name: 'echarts' }
         ]
     },
-    {
-        path: '/',
-        component: Home,
-        name: '计费规则',
-        iconCls: 'fa fa-address-card',
-        leaf: true,//只有一个节点
-        children: [
-            { path: '/rule', component: ChargeRule, name: '计费规则' }
-        ]
-    },
+    // {
+    //     path: '/',
+    //     component: Home,
+    //     name: '行李类型',
+    //     iconCls: 'fa fa-address-card',
+    //     leaf: true,//只有一个节点
+    //     children: [
+    //         { path: '/luggage_type', component: LuggageType, name: '行李类型' }
+    //     ]
+    // },
+    // {
+    //     path: '/',
+    //     component: Home,
+    //     name: '计费规则',
+    //     iconCls: 'fa fa-address-card',
+    //     leaf: true,//只有一个节点
+    //     children: [
+    //         { path: '/rule', component: ChargeRule, name: '计费规则' }
+    //     ]
+    // },
     {
         path: '*',
         hidden: true,

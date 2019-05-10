@@ -51,8 +51,9 @@
       <el-table-column prop="depositorName" label="寄存人姓名" width="135" sortable></el-table-column>
       <el-table-column prop="depositorPhone" label="寄存人电话" width="135" sortable></el-table-column>
       <el-table-column prop="luggageTypeDesc" label="行李类型" width="120" sortable></el-table-column>
+      <el-table-column prop="storageFee" label="费用" width="90" sortable></el-table-column>
       <el-table-column prop="status" label="状态" width="100" sortable></el-table-column>
-      <el-table-column prop="remark" label="备注" width="120" sortable></el-table-column>
+      <el-table-column prop="remark" label="备注" width="150" sortable></el-table-column>
       <el-table-column
         prop="storageStartTime"
         label="寄存开始时间"
