@@ -32,10 +32,19 @@ let routes = [
     {
         path: '/',
         component: Home,
+        name: 'Charts',
+        iconCls: 'fa fa-bar-chart',
+        children: [
+            { path: '/main', component: Main, name: '主页', hidden: true },
+            { path: '/echarts', component: echarts, name: 'echarts' }
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
         name: '管理员模块',
         iconCls: 'el-icon-message', //图标样式class
         children: [
-            { path: '/main', component: Main, name: '主页', hidden: true },
             { path: '/admin', component: Admin, name: '管理员信息' },
             { path: '/rule', component: ChargeRule, name: '计费规则信息' },
             { path: '/luggage_type', component: LuggageType, name: '行李类型' }
@@ -95,15 +104,6 @@ let routes = [
             { path: '/turnover', component: Turnover, name: '营业额记录' },
             { path: '/turnover/query', component: Page4, name: '按照管理员分组的营业额' },
             { path: '/turnover/statistics', component: Page5, name: '每天的营业额' }
-        ]
-    },
-    {
-        path: '/',
-        component: Home,
-        name: 'Charts',
-        iconCls: 'fa fa-bar-chart',
-        children: [
-            { path: '/echarts', component: echarts, name: 'echarts' }
         ]
     },
     // {

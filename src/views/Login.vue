@@ -68,7 +68,7 @@ export default {
           });
         } else {
           sessionStorage.setItem("user", JSON.stringify(this.ruleForm2.account));
-          this.$router.push({ path: "/admin" });
+          this.$router.push({ path: "/echarts" });
         }
       });
     }
