@@ -62,7 +62,7 @@ export default {
         this.logining = false;
         let records = res.data;
         console.log("登录信息:" + res.message);
-        if (res.status == 200) {
+        if (res.success === true) {
           sessionStorage.setItem(
             "user",
             JSON.stringify(this.ruleForm2.account)
