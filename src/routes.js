@@ -13,7 +13,8 @@ import OverdueRecord from './views/overdue-record/OverdueRecord.vue'
 import PickupRecord from './views/pickup-record/PickupRecord.vue'
 import CompensateRecord from './views/compensate-record/CompensateRecord.vue'
 import LostRegisterRecord from './views/lost-register-record/LostRegisterRecord.vue'
-import echarts from './views/charts/echarts.vue'
+import TurnoverByFeeTypeChart from './views/charts/TurnoverByFeeTypeChart.vue'
+import TurnoverByAdminChart from './views/charts/TurnoverByAdminChart.vue'
 
 let routes = [
     {
@@ -32,11 +33,13 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: 'Charts',
+        name: '营业额可视化数据',
         iconCls: 'fa fa-bar-chart',
         children: [
             { path: '/main', component: Main, name: '主页', hidden: true },
-            { path: '/echarts', component: echarts, name: 'echarts' }
+            { path: '/turnover/statistics_by_admin', component: TurnoverByAdminChart, name: '按工作人员分组' },
+            { path: '/turnover/statistics_by_fee_type', component: TurnoverByFeeTypeChart, name: '按费用类型分组' }
+            
         ]
     },
     {

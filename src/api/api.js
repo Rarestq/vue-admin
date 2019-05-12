@@ -47,6 +47,6 @@ export const getOverdueRecordListPage = params => { return axios.get(`${base}/ov
 
 // 营业额记录相关接口
 export const getTurnoverRecordListPage = params => { return axios.get(`${base}/turnover`, { params: params }); };
-export const getTurnoverRecordPair = params => { return axios.get(`${base}/turnover/query`, { params: params }); };
-export const statisticsTotalTurnover = params => { return axios.get(`${base}/turnover/statistics`, { params: params }); };
+export const statisticsTurnoverByAdmin = params => { return axios.get(`${base}/turnover/statistics_by_admin`, { params: params }); };
+export const statisticsTurnoverByFeeType = params => { return axios.get(`${base}/turnover/statistics_by_fee_type`, { params: params }); };
 

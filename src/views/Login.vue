@@ -67,7 +67,7 @@ export default {
             "user",
             JSON.stringify(this.ruleForm2.account)
           );
-          this.$router.push({ path: "/echarts" });
+          this.$router.push({ path: "/turnover/statistics_by_admin" });
         } else {
           this.$message({
             message: res.message,
