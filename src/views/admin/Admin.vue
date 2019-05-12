@@ -247,15 +247,6 @@ export default {
     };
   },
   methods: {
-    // 管理员类型显示转换
-    // formatAdminType: function(para) {
-    //   para.adminType === "普通管理员"
-    //     ? 1
-    //     : para.adminType === "超级管理员"
-    //     ? 2
-    //     : 3;
-    // },
-
     // 时间格式化
     dateFormat: function(row, column) {
       // console.log(row, column);
@@ -297,12 +288,6 @@ export default {
           this.pageSize = res.data.data.size;
           this.users = res.data.data.records;
           this.listLoading = false;
-          // this.$message({
-          //   // 后台返回的操作结果
-          //   // message: res.data.message,
-          //   message: '查询成功',
-          //   type: "success"
-          // });
         } else {
           this.$message({
             message: res.data.message,
@@ -344,10 +329,6 @@ export default {
             delete para.adminNo;
             delete para.gmtCreate;
             delete para.gmtModified;
-            // para.birth =
-            //   !para.birth || para.birth == ""
-            //     ? ""
-            //     : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
             saveAdmin(para).then(res => {
               this.editLoading = false;
               //NProgress.done();
@@ -382,10 +363,6 @@ export default {
             delete para.adminNo;
             delete para.gmtCreate;
             delete para.gmtModified;
-            // para.birth =
-            //   !para.birth || para.birth == ""
-            //     ? ""
-            //     : util.formatDate.format(new Date(para.birth), "yyyy-MM-dd");
             addAdmin(para).then(res => {
               this.addLoading = false;
               //NProgress.done();

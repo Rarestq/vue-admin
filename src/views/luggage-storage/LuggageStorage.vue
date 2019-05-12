@@ -41,7 +41,6 @@
       @selection-change="selsChange"
       style="width: 100%;"
     >
-      <!-- <el-table-column type="selection" width="55"></el-table-column> -->
       <el-table-column type="index" width="60"></el-table-column>
       <el-table-column prop="luggageId" label="行李寄存记录id" width="80" v-if="false"></el-table-column>
       <el-table-column prop="luggageRecordNo" label="寄存记录编号" width="180" sortable></el-table-column>
@@ -51,7 +50,6 @@
       <el-table-column prop="depositorName" label="寄存人姓名" width="135" sortable></el-table-column>
       <el-table-column prop="depositorPhone" label="寄存人电话" width="135" sortable></el-table-column>
       <el-table-column prop="luggageTypeDesc" label="行李类型" width="120" sortable></el-table-column>
-      <!-- <el-table-column prop="storageFee" label="费用" width="90" sortable></el-table-column> -->
       <el-table-column prop="status" label="状态" width="100" sortable></el-table-column>
       <el-table-column prop="remark" label="备注" width="150" sortable></el-table-column>
       <el-table-column
@@ -82,9 +80,6 @@
 
     <!--分页工具条-->
     <el-col :span="24" class="toolbar">
-      <!-- <el-button @click="batchCommonPickup" :disabled="this.sels.length===0">批量正常取件</el-button>
-      <el-button type="info" @click="batchOverduePickup" :disabled="this.sels.length===0">批量逾期取件</el-button>
-      <el-button type="danger" @click="batchMarkAsLost" :disabled="this.sels.length===0">批量标记遗失</el-button> -->
       <div style="float: right">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
@@ -348,35 +343,6 @@ export default {
       this.getLuggageStorageRecords();
     },
 
-    // 批量正常取件
-    // batchCommonPickup: function() {
-    //   var ids = this.sels.map(item => item.adminId).toString();
-    //   this.$confirm("确认对选中记录进行正常取件操作吗？", "提示", {
-    //     type: "info"
-    //   })
-    //     .then(() => {
-    //       this.listLoading = true;
-    //       //NProgress.start();
-    //       let para = { adminIds: ids };
-    //       addCommonPickupRecord(para).then(res => {
-    //         this.listLoading = false;
-    //         if (res.data.success) {
-    //           this.$message({
-    //             message: res.data.message,
-    //             type: "success"
-    //           });
-    //         } else {
-    //           this.$message({
-    //             message: res.data.message,
-    //             type: "error"
-    //           });
-    //         }
-    //         this.getAdmins();
-    //       });
-    //     })
-    //     .catch(() => {});
-    // },
-
     // 正常取件
     commonPickup: function(index, row) {
       this.$confirm("确认取件吗?", "提示", {
@@ -477,11 +443,6 @@ export default {
           this.storageRecords = res.data.data.records;
 
           this.listLoading = false;
-          // this.$message({
-          //   // message: res.data.message,
-          //   message: '查询成功',
-          //   type: "success"
-          // });
         } else {
           this.$message({
             message: res.message,

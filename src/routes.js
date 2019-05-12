@@ -29,7 +29,6 @@ let routes = [
         name: '',
         hidden: true
     },
-    //{ path: '/main', component: Main },
     {
         path: '/',
         component: Home,
@@ -109,26 +108,7 @@ let routes = [
             { path: '/turnover/statistics', component: Page5, name: '每天的营业额' }
         ]
     },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '行李类型',
-    //     iconCls: 'fa fa-address-card',
-    //     leaf: true,//只有一个节点
-    //     children: [
-    //         { path: '/luggage_type', component: LuggageType, name: '行李类型' }
-    //     ]
-    // },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '计费规则',
-    //     iconCls: 'fa fa-address-card',
-    //     leaf: true,//只有一个节点
-    //     children: [
-    //         { path: '/rule', component: ChargeRule, name: '计费规则' }
-    //     ]
-    // },
+    
     {
         path: '*',
         hidden: true,

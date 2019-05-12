@@ -134,7 +134,6 @@ export default {
   methods: {
     // 时间格式化
     dateFormat: function(row, column) {
-      // console.log(row, column);
       const date = row[column.property];
       if (date === undefined) {
         return "";
@@ -172,11 +171,6 @@ export default {
           this.pageSize = res.data.data.size;
           this.compensateRecords = res.data.data.records;
           this.listLoading = false;
-          // this.$message({
-          //   // message: res.data.message,
-          //   message: '查询成功',
-          //   type: "success"
-          // });
         } else {
           this.$message({
             message: res.data.message,

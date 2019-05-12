@@ -54,8 +54,6 @@ export default {
           y: 50,
           feature: {
             dataView: { show: true, readOnly: false },
-            //magicType : {show: true, type: ['line', 'bar']},
-            //restore : {show: true},
             saveAsImage: { show: true }
           }
         },
@@ -110,12 +108,4 @@ export default {
   width: 100%;
   float: center;
 }
-/*.chart div {
-        height: 400px;
-        float: left;
-    }*/
-
-/* .el-col {
-  padding: 30px 20px; */
-/* } */
 </style>
