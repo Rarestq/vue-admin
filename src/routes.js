@@ -101,9 +101,7 @@ let routes = [
         name: '营业额记录模块',
         iconCls: 'fa fa-id-card-o',
         children: [
-            { path: '/turnover', component: Turnover, name: '营业额记录' },
-            { path: '/turnover/query', component: Page4, name: '按照管理员分组的营业额' },
-            { path: '/turnover/statistics', component: Page5, name: '每天的营业额' }
+            { path: '/turnover', component: Turnover, name: '营业额记录' }
         ]
     },
     
