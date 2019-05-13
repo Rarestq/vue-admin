@@ -17,7 +17,7 @@ export default {
   },
 
   methods: {
-    // 按照管理员id对查询到的营业额进行分组
+    // 按照费用类型对查询到的营业额进行分组
     statisticsTurnoverByFee() {
       statisticsTurnoverByFeeType()
         .then(res => {
@@ -38,7 +38,7 @@ export default {
     drawColumnChart() {
       this.chartColumn = echarts.init(document.getElementById("chartColumn"));
       this.chartColumn.setOption({
-        title: { text: "工作人员营业额柱状图(单位：元)" },
+        title: { text: "不同费用类型营业额柱状图(单位：元)" },
         tooltip: {
           trigger: "axis",
           axisPointer: {
@@ -82,7 +82,7 @@ export default {
         ],
         series: [
           {
-            name: "按照管理员id对查询到的营业额进行分组",
+            name: "按照费用类型对查询到的营业额进行分组",
             type: "bar",
             barWidth: "60%",
             data: []
