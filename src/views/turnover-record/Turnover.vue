@@ -42,10 +42,22 @@
       <el-table-column prop="luggageStorageRecordNo" label="行李寄存编号" width="150"></el-table-column>
       <el-table-column prop="adminId" label="管理员id" width="100" v-if="false"></el-table-column>
       <el-table-column prop="adminName" label="管理员姓名" width="120"></el-table-column>
-      <el-table-column prop="luggageType" label="行李类型" width="120"></el-table-column>
+      <el-table-column label="行李类型" width="120">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.luggageType === '普通物件'">普通物件</el-tag>
+          <el-tag type="warning" v-if="scope.row.luggageType === '易碎物件'">易碎物件</el-tag>
+          <el-tag type="danger" v-if="scope.row.luggageType === '贵重物件'">贵重物件</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="calculationRuleId" label="计费规则主键id" width="80" v-if="false"></el-table-column>
       <el-table-column prop="fee" label="费用" width="120"></el-table-column>
-      <el-table-column prop="feeType" label="费用类型" width="120"></el-table-column>
+      <el-table-column label="费用类型" width="120">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.feeType === '寄存费用'">寄存费用</el-tag>
+          <el-tag type="warning" v-if="scope.row.feeType === '逾期费用'">逾期费用</el-tag>
+          <el-tag type="danger" v-if="scope.row.feeType === '赔偿费用'">赔偿费用</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="remark" label="备注" width="360"></el-table-column>
       <el-table-column prop="gmtCreate" label="创建时间" :formatter="dateFormat" min-width="180"></el-table-column>
       <el-table-column prop="gmtModified" label="修改时间" :formatter="dateFormat" min-width="180"></el-table-column>

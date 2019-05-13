@@ -39,7 +39,13 @@
       <el-table-column prop="adminName" label="管理员姓名" width="120"></el-table-column>
       <el-table-column prop="depositorName" label="赔偿对象姓名" width="120"></el-table-column>
       <el-table-column prop="depositorPhone" label="赔偿对象电话" width="130"></el-table-column>
-      <el-table-column prop="luggageType" label="行李类型" width="120"></el-table-column>
+      <el-table-column label="行李类型" width="120">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.luggageType === '普通物件'">普通物件</el-tag>
+          <el-tag type="warning" v-if="scope.row.luggageType === '易碎物件'">易碎物件</el-tag>
+          <el-tag type="danger" v-if="scope.row.luggageType === '贵重物件'">贵重物件</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="compensationFee" label="赔偿金额" width="120"></el-table-column>
       <el-table-column prop="remark" label="备注" width="150"></el-table-column>
       <el-table-column prop="compensateTime" label="赔偿时间" :formatter="dateFormat" min-width="180"></el-table-column>

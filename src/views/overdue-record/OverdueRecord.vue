@@ -35,10 +35,21 @@
       <el-table-column prop="overdueRecordNo" label="记录编号" width="180"></el-table-column>
       <el-table-column prop="luggageId" label="行李寄存主键id" width="80" v-if="false"></el-table-column>
       <el-table-column prop="luggageRecordNo" label="寄存记录编号" width="180"></el-table-column>
-      <el-table-column prop="luggageType" label="行李类型" width="120"></el-table-column>
+      <el-table-column label="行李类型" width="120">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.luggageType === '普通物件'">普通物件</el-tag>
+          <el-tag type="warning" v-if="scope.row.luggageType === '易碎物件'">易碎物件</el-tag>
+          <el-tag type="danger" v-if="scope.row.luggageType === '贵重物件'">贵重物件</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="depositorName" label="寄存人姓名" width="120"></el-table-column>
       <el-table-column prop="depositorPhone" label="寄存人电话" width="120"></el-table-column>
-      <el-table-column prop="status" label="状态" width="120"></el-table-column>
+      <el-table-column label="状态" width="120">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.status === '已逾期'">已逾期</el-tag>
+          <el-tag type="danger" v-if="scope.row.status === '已清理作废'">已清理作废</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="remark" label="备注" width="120"></el-table-column>
       <el-table-column prop="gmtCreate" label="创建时间" :formatter="dateFormat" min-width="180"></el-table-column>
       <el-table-column prop="gmtModified" label="修改时间" :formatter="dateFormat" min-width="180"></el-table-column>

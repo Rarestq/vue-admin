@@ -36,7 +36,12 @@
       <el-table-column prop="adminName" label="管理员姓名" width="120"></el-table-column>
       <el-table-column prop="pickerName" label="取件人姓名" width="120"></el-table-column>
       <el-table-column prop="pickerPhone" label="取件人电话" width="130"></el-table-column>
-      <el-table-column prop="pickupType" label="取件类型" width="120"></el-table-column>
+      <el-table-column label="取件类型" width="120">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.pickupType === '正常取件'">正常取件</el-tag>
+          <el-tag type="danger" v-if="scope.row.pickupType === '逾期取件'">逾期取件</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="pickUpTime" label="取件时间" :formatter="dateFormat" min-width="180"></el-table-column>
     </el-table>
 

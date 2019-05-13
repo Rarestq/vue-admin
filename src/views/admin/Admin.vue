@@ -41,7 +41,13 @@
       <el-table-column prop="adminName" label="姓名" width="100" sortable></el-table-column>
       <el-table-column prop="adminPhone" label="电话" width="125" sortable></el-table-column>
       <el-table-column prop="password" label="登录密码" min-width="120" sortable></el-table-column>
-      <el-table-column prop="adminType" label="类型" width="130" sortable></el-table-column>
+      <el-table-column label="类型" width="120">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.adminType === '系统'">系统</el-tag>
+          <el-tag type="warning" v-if="scope.row.adminType === '普通管理员'">普通管理员</el-tag>
+          <el-tag type="danger" v-if="scope.row.adminType === '超级管理员'">超级管理员</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="gmtCreate"
         label="创建时间"

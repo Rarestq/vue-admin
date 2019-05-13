@@ -49,8 +49,22 @@
       <el-table-column prop="adminPhone" label="管理员电话" width="135" sortable></el-table-column>
       <el-table-column prop="depositorName" label="寄存人姓名" width="135" sortable></el-table-column>
       <el-table-column prop="depositorPhone" label="寄存人电话" width="135" sortable></el-table-column>
-      <el-table-column prop="luggageTypeDesc" label="行李类型" width="120" sortable></el-table-column>
-      <el-table-column prop="status" label="状态" width="100" sortable></el-table-column>
+      <el-table-column label="行李类型" width="120">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.luggageTypeDesc === '普通物件'">普通物件</el-tag>
+          <el-tag type="warning" v-if="scope.row.luggageTypeDesc === '易碎物件'">易碎物件</el-tag>
+          <el-tag type="danger" v-if="scope.row.luggageTypeDesc === '贵重物件'">贵重物件</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" width="130">
+        <template slot-scope="scope">
+          <el-tag type="success" v-if="scope.row.status === '寄存中'">寄存中</el-tag>
+          <el-tag type="info" v-if="scope.row.status === '已逾期'">已逾期</el-tag>
+          <el-tag type="danger" v-if="scope.row.status === '行李已遗失'">行李已遗失</el-tag>
+          <el-tag type="success" v-if="scope.row.status === '已取件'">已取件</el-tag>
+          <el-tag type="warning" v-if="scope.row.status === '逾期取件'">逾期取件</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="remark" label="备注" width="150" sortable></el-table-column>
       <el-table-column
         prop="storageStartTime"
@@ -69,11 +83,25 @@
       <el-table-column label="操作" width="280">
         <template slot-scope="scope">
           <!-- 只有寄存中的记录，才能进行「正常取件」操作 -->
-          <el-button size="small" @click="commonPickup(scope.$index, scope.row)" :disabled="scope.row.status === '寄存中' ? false : true">正常取件</el-button>
+          <el-button
+            size="small"
+            @click="commonPickup(scope.$index, scope.row)"
+            :disabled="scope.row.status === '寄存中' ? false : true"
+          >正常取件</el-button>
           <!-- 只有已逾期的记录才能进行「逾期取件」操作 -->
-          <el-button type="info" size="small" @click="overduePickup(scope.$index, scope.row)" :disabled="scope.row.status === '已逾期' ? false : true">逾期取件</el-button>
+          <el-button
+            type="info"
+            size="small"
+            @click="overduePickup(scope.$index, scope.row)"
+            :disabled="scope.row.status === '已逾期' ? false : true"
+          >逾期取件</el-button>
           <!-- 只有寄存中的记录，才能进行「遗失标记」操作 -->
-          <el-button type="danger" size="small" @click="markAsLost(scope.$index, scope.row)" :disabled="scope.row.status === '寄存中' ? false : true">标记遗失</el-button>
+          <el-button
+            type="danger"
+            size="small"
+            @click="markAsLost(scope.$index, scope.row)"
+            :disabled="scope.row.status === '寄存中' ? false : true"
+          >标记遗失</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -98,11 +126,7 @@
     <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
         <el-form-item label="管理员姓名" v-if="false">
-          <el-input
-            v-model="addForm.adminName"
-            auto-complete="off"
-            name="adminName"
-          ></el-input>
+          <el-input v-model="addForm.adminName" auto-complete="off" name="adminName"></el-input>
         </el-form-item>
         <el-form-item label="姓名">
           <el-input
@@ -515,7 +539,7 @@ export default {
                 : util.formatDate.format(
                     new Date(para.storageEndTime),
                     "yyyy-MM-dd hh:mm:ss"
-                  );                  
+                  );
             addLuggageStorageRecord(para).then(res => {
               this.addLoading = false;
               //NProgress.done();
@@ -540,8 +564,8 @@ export default {
     this.getLuggageStorageRecords();
     var user = sessionStorage.getItem("user");
     if (user) {
-	  user = JSON.parse(user);
-	  console.log("当前登录人:" + user)
+      user = JSON.parse(user);
+      console.log("当前登录人:" + user);
       this.adminName = user || "";
     }
   }
