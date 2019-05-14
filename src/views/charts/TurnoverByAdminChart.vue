@@ -17,7 +17,7 @@ export default {
   },
 
   methods: {
-    // 按照费用类型对查询到的营业额进行分组
+    // 按照管理员对查询到的营业额进行分组
     statisticsTurnoverByAdminInfo() {
       statisticsTurnoverByAdmin()
         .then(res => {
@@ -40,7 +40,7 @@ export default {
       // 绘制图表
       this.chartPie.setOption({
         title: {
-          text: "按费用类型分组的营业额数据（单位：元）",
+          text: "按工作人员分组的营业额数据（单位：元）",
           x: "center"
         },
         tooltip: {
