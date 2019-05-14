@@ -4,10 +4,12 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.adminName" placeholder="管理员姓名(支持模糊查询)" clearable></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="filters.depositorName" placeholder="赔偿人姓名(支持模糊查询)" clearable></el-input>
+          <el-input
+            size="42px"
+            v-model="filters.queryCondition"
+            placeholder="可输入管理员姓名或赔偿人姓名(支持模糊查询)"
+            clearable
+          ></el-input>
         </el-form-item>
         <el-select v-model="filters.luggageTypeId" clearable placeholder="行李类型">
           <el-option
@@ -31,7 +33,12 @@
       style="width: 100%;"
     >
       <el-table-column type="index" width="60"></el-table-column>
-      <el-table-column prop="luggageLostCompensationRecordId" label="赔偿记录主键id" width="80" v-if="false"></el-table-column>
+      <el-table-column
+        prop="luggageLostCompensationRecordId"
+        label="赔偿记录主键id"
+        width="80"
+        v-if="false"
+      ></el-table-column>
       <el-table-column prop="lostCompensateRecordNo" label="遗失赔偿记录编号" width="180"></el-table-column>
       <el-table-column prop="lostRegistrationRecordId" label="行李遗失登记主键id" width="100" v-if="false"></el-table-column>
       <el-table-column prop="lostRegistRecordNo" label="遗失登记编号" width="160"></el-table-column>
@@ -72,9 +79,7 @@
 <script>
 import util from "../../common/js/util";
 import moment from "moment";
-import {
-  getLostCompensateRecordListPage
-} from "../../api/api";
+import { getLostCompensateRecordListPage } from "../../api/api";
 
 export default {
   data() {
@@ -125,7 +130,7 @@ export default {
       ],
       value: "",
       filters: {
-        adminName: "",
+        queryCondition: "",
         luggageTypeId: null,
         gmtCreate: ""
       },
@@ -166,8 +171,7 @@ export default {
         current: this.currentPage,
         size: this.pageSize,
         luggageTypeId: this.filters.luggageTypeId,
-        adminName: this.filters.adminName,
-        depositorName: this.filters.depositorName
+        queryCondition: this.filters.queryCondition
       };
       this.listLoading = true;
       getLostCompensateRecordListPage(para).then(res => {

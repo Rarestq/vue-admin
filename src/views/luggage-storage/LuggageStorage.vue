@@ -4,26 +4,8 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.luggageRecordNo" placeholder="寄存编号(模糊查询)"></el-input>
+          <el-input size="45px" v-model="filters.condition" placeholder="可输入寄存编号、寄存人姓名或电话(模糊查询)"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-input v-model="filters.depositorName" placeholder="寄存人姓名(模糊查询)"></el-input>
-        </el-form-item>
-
-        <el-form-item>
-          <el-input v-model="filters.depositorPhone" placeholder="寄存人电话(模糊查询)"></el-input>
-        </el-form-item>
-        <!-- <el-form-item>
-          <p v-if="false">组件值：{{ filters.storageEndTimeRange }}</p>
-          <el-date-picker
-            v-model="filters.storageEndTimeRange"
-            type="daterange"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            :default-time="['00:00:00', '23:59:59']"
-            placeholder="结束日期范围"
-          ></el-date-picker>
-        </el-form-item>-->
         <el-form-item>
           <el-button type="primary" v-on:click="getLuggageStorageRecords">查询</el-button>
         </el-form-item>
@@ -300,10 +282,7 @@ export default {
       ],
       calculateRuleId: "",
       filters: {
-        depositorName: "",
-        luggageRecordNo: "",
-        depositorPhone: "",
-        storageEndTime: "",
+        condition: "",
         luggageTypeId: null
       },
       storageRecords: [],
@@ -454,9 +433,7 @@ export default {
         current: this.currentPage,
         size: this.pageSize,
         luggageId: this.luggageId,
-        luggageRecordNo: this.filters.luggageRecordNo,
-        depositorName: this.filters.depositorName,
-        depositorPhone: this.filters.depositorPhone
+        queryCondition: this.filters.condition
       };
       this.listLoading = true;
       getStorageRecordListPage(para).then(res => {

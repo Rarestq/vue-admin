@@ -4,10 +4,12 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.luggageRecordNo" placeholder="寄存记录编号(模糊查询)" clearable></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="filters.depositorName" placeholder="寄存人姓名(模糊查询)" clearable></el-input>
+          <el-input
+            size="42px"
+            v-model="filters.condition"
+            placeholder="可输入寄存记录编号或寄存人姓名(模糊查询)"
+            clearable
+          ></el-input>
         </el-form-item>
         <el-select v-model="filters.status" clearable placeholder="状态">
           <el-option
@@ -32,7 +34,7 @@
     >
       <el-table-column type="index" width="60"></el-table-column>
       <el-table-column prop="luggageOverdueRecordId" label="行李逾期未取记录主键id" width="80" v-if="false"></el-table-column>
-      <el-table-column prop="overdueRecordNo" label="记录编号" width="180"></el-table-column>
+      <el-table-column prop="overdueRecordNo" label="逾期记录编号" width="180"></el-table-column>
       <el-table-column prop="luggageId" label="行李寄存主键id" width="80" v-if="false"></el-table-column>
       <el-table-column prop="luggageRecordNo" label="寄存记录编号" width="180"></el-table-column>
       <el-table-column label="行李类型" width="120">
@@ -76,9 +78,7 @@
 <script>
 import util from "../../common/js/util";
 import moment from "moment";
-import {
-  getOverdueRecordListPage
-} from "../../api/api";
+import { getOverdueRecordListPage } from "../../api/api";
 
 export default {
   data() {
@@ -95,8 +95,7 @@ export default {
       ],
       value: "",
       filters: {
-        luggageRecordNo: "",
-        depositorName: "",
+        condition: "",
         status: null
       },
       overdueRecords: [],
@@ -136,8 +135,7 @@ export default {
       let para = {
         current: this.currentPage,
         size: this.pageSize,
-        luggageRecordNo: this.filters.luggageRecordNo,
-        depositorName: this.filters.depositorName,
+        queryCondition: this.filters.condition,
         status: this.filters.status
       };
       this.listLoading = true;

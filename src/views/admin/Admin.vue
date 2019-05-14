@@ -4,10 +4,7 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.adminName" placeholder="姓名(模糊查询)"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input v-model="filters.adminNo" placeholder="管理员编号(模糊查询)"></el-input>
+          <el-input size="32px" v-model="filters.condition" placeholder="输入管理员姓名或者编号(模糊查询)"></el-input>
         </el-form-item>
         <el-select v-model="filters.adminType" clearable placeholder="管理员类型">
           <el-option
@@ -64,8 +61,17 @@
       ></el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)" v-if="filters.adminType === '超级管理员' ? false : true">编辑</el-button>
-          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)" v-if="filters.adminType === '超级管理员' ? false : true">删除</el-button>
+          <el-button
+            size="small"
+            @click="handleEdit(scope.$index, scope.row)"
+            v-if="filters.adminType === '超级管理员' ? false : true"
+          >编辑</el-button>
+          <el-button
+            type="danger"
+            size="small"
+            @click="handleDel(scope.$index, scope.row)"
+            v-if="filters.adminType === '超级管理员' ? false : true"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -172,7 +178,6 @@
 <script>
 import util from "../../common/js/util";
 import moment from "moment";
-//import NProgress from 'nprogress'
 import {
   getAdminListPage,
   removeAdmin,
@@ -200,8 +205,7 @@ export default {
       ],
       value: "",
       filters: {
-        adminNo: "",
-        adminName: "",
+        condition: "",
         adminType: null
       },
       users: [],
@@ -282,8 +286,7 @@ export default {
         current: this.currentPage,
         size: this.pageSize,
         adminId: this.adminId,
-        adminNo: this.filters.adminNo,
-        adminName: this.filters.adminName,
+        queryCondition: this.filters.condition,
         adminType: this.filters.adminType
       };
       this.listLoading = true;

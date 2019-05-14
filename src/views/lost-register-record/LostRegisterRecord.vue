@@ -4,10 +4,12 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters">
         <el-form-item>
-          <el-input v-model="filters.depositorName" placeholder="丢失人姓名(模糊查询)" clearable></el-input>
-        </el-form-item>
-         <el-form-item>
-          <el-input v-model="filters.lostRecordNo" placeholder="遗失登记编号(模糊查询)" clearable></el-input>
+          <el-input
+            size="42px"
+            v-model="filters.queryCondition"
+            placeholder="可输入丢失人姓名或遗失登记编号(模糊查询)"
+            clearable
+          ></el-input>
         </el-form-item>
         <el-select v-model="filters.status" clearable placeholder="记录状态">
           <el-option
@@ -57,11 +59,15 @@
       <el-table-column prop="gmtModified" label="修改时间" :formatter="dateFormat" min-width="180"></el-table-column>
       <el-table-column label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="compensate(scope.$index, scope.row)" :disabled="scope.row.status === '已遗失' ? false : true">进行赔偿</el-button>
+          <el-button
+            type="danger"
+            size="small"
+            @click="compensate(scope.$index, scope.row)"
+            :disabled="scope.row.status === '已遗失' ? false : true"
+          >进行赔偿</el-button>
         </template>
       </el-table-column>
     </el-table>
-    
 
     <!--分页工具条-->
     <el-col :span="24" class="toolbar">
@@ -104,8 +110,7 @@ export default {
       ],
       value: "",
       filters: {
-        depositorName: "",
-        lostRecordNo: "",
+        queryCondition: "",
         status: null
       },
       lostRegisterRecords: [],
@@ -171,8 +176,7 @@ export default {
       let para = {
         current: this.currentPage,
         size: this.pageSize,
-        depositorName: this.filters.depositorName,
-        lostRecordNo: this.filters.lostRecordNo,
+        queryCondition: this.filters.queryCondition,
         status: this.filters.status
       };
       this.listLoading = true;
