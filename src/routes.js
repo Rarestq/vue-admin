@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import Main from './views/Main.vue'
 import Admin from './views/admin/Admin.vue'
 import ChargeRule from './views/admin/ChargeRule.vue'
+import Cabinet from './views/admin/LuggageCabinet.vue'
 import LuggageStorage from './views/luggage-storage/LuggageStorage.vue'
 import LuggageType from './views/luggage-type/LuggageType.vue'
 import Turnover from './views/turnover-record/Turnover.vue'
@@ -46,6 +47,7 @@ let routes = [
         iconCls: 'el-icon-message', //图标样式class
         children: [
             { path: '/admin', component: Admin, name: '管理员信息' },
+            { path: '/cabinet', component: Cabinet, name: '寄存柜信息' },
             { path: '/rule', component: ChargeRule, name: '计费规则信息' },
             { path: '/luggage_type', component: LuggageType, name: '行李类型' }
         ]

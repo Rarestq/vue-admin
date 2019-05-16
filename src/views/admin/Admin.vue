@@ -64,13 +64,11 @@
           <el-button
             size="small"
             @click="handleEdit(scope.$index, scope.row)"
-            v-if="filters.adminType === '超级管理员' ? false : true"
           >编辑</el-button>
           <el-button
             type="danger"
             size="small"
             @click="handleDel(scope.$index, scope.row)"
-            v-if="filters.adminType === '超级管理员' ? false : true"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -280,7 +278,7 @@ export default {
       this.getAdmins();
     },
 
-    //获取管理员信息列表
+    // 获取管理员信息列表
     getAdmins() {
       let para = {
         current: this.currentPage,
@@ -306,12 +304,12 @@ export default {
       });
     },
 
-    //显示编辑界面
+    // 显示编辑界面
     handleEdit: function(index, row) {
       this.editFormVisible = true;
       this.editForm = Object.assign({}, row);
     },
-    //显示新增界面
+    // 显示新增界面
     handleAdd: function() {
       this.addFormVisible = true;
       this.addForm = {
@@ -321,7 +319,8 @@ export default {
         adminType: "普通管理员"
       };
     },
-    //编辑管理员信息
+
+    // 编辑管理员信息
     editSubmit: function() {
       this.$refs.editForm.validate(valid => {
         if (valid) {

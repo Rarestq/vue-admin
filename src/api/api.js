@@ -50,3 +50,7 @@ export const getTurnoverRecordListPage = params => { return axios.get(`${base}/t
 export const statisticsTurnoverByAdmin = params => { return axios.get(`${base}/turnover/statistics_by_admin`, { params: params }); };
 export const statisticsTurnoverByFeeType = params => { return axios.get(`${base}/turnover/statistics_by_fee_type`, { params: params }); };
 
+// 行李寄存柜相关接口
+export const getCabinetInfoPage = params => { return axios.get(`${base}/cabinet`, { params: params }); };
+export const repairCabinets = params => { return axios.post(`${base}/cabinet/repair`, params).then(res => res.data); };
+export const batchRepairCabinets = params => { return axios.post(`${base}/cabinet/repair`, params).then(res => res.data); };
