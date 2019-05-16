@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let base = 'http://localhost:8099/luggage_storage/api';
+let base = 'http://localhost:8098/luggage_storage/api';
 axios.defaults.withCredentials = true; // 让ajax携带cookie
 
 // 登录相关接口
