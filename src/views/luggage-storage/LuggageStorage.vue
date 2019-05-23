@@ -38,6 +38,8 @@
           <el-tag type="danger" v-if="scope.row.luggageTypeDesc === '贵重物件'">贵重物件</el-tag>
         </template>
       </el-table-column>
+      <el-table-column prop="cabinetId" label="寄存柜id" width="80" v-if="false"></el-table-column>
+      <el-table-column prop="luggageCabinetNo" label="寄存柜编号" width="150" sortable></el-table-column>
       <el-table-column label="状态" width="130">
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.status === '寄存中'">寄存中</el-tag>
