@@ -143,7 +143,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="计费规则">
+        <!-- <el-form-item label="计费规则">
           <el-select
             v-model="addForm.calculateRuleId"
             value-key="calculateRuleId"
@@ -157,7 +157,7 @@
               :value="item.calculateRuleId"
             ></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="备注">
           <el-input
             v-model="addForm.remark"
@@ -256,33 +256,33 @@ export default {
       value: "",
 
       // 计费规则
-      calculateRules: [
-        {
-          calculateRuleId: "1",
-          label: "普通物件-规则1(按小时计费)"
-        },
-        {
-          calculateRuleId: "2",
-          label: "普通物件-规则2(按次数计费)"
-        },
-        {
-          calculateRuleId: "3",
-          label: "易碎物件-规则1(按小时计费)"
-        },
-        {
-          calculateRuleId: "4",
-          label: "易碎物件-规则2(按次数计费)"
-        },
-        {
-          calculateRuleId: "5",
-          label: "贵重物件-规则1(按小时计费)"
-        },
-        {
-          calculateRuleId: "6",
-          label: "贵重物件-规则2(按次数计费)"
-        }
-      ],
-      calculateRuleId: "",
+      // calculateRules: [
+      //   {
+      //     calculateRuleId: "1",
+      //     label: "普通物件-规则1(按小时计费)"
+      //   },
+      //   {
+      //     calculateRuleId: "2",
+      //     label: "普通物件-规则2(按次数计费)"
+      //   },
+      //   {
+      //     calculateRuleId: "3",
+      //     label: "易碎物件-规则1(按小时计费)"
+      //   },
+      //   {
+      //     calculateRuleId: "4",
+      //     label: "易碎物件-规则2(按次数计费)"
+      //   },
+      //   {
+      //     calculateRuleId: "5",
+      //     label: "贵重物件-规则1(按小时计费)"
+      //   },
+      //   {
+      //     calculateRuleId: "6",
+      //     label: "贵重物件-规则2(按次数计费)"
+      //   }
+      // ],
+      // calculateRuleId: "",
       filters: {
         condition: "",
         luggageTypeId: null
@@ -317,7 +317,7 @@ export default {
         depositorName: "",
         depositorPhone: "",
         luggageTypeId: null,
-        calculateRuleId: null,
+        // calculateRuleId: null,
         remark: "",
         storageStartTime: "",
         storageEndTime: ""
@@ -463,7 +463,7 @@ export default {
         depositorName: "",
         depositorPhone: "",
         luggageTypeId: null,
-        calculateRuleId: null,
+        // calculateRuleId: null,
         remark: "",
         storageStartTime: "",
         storageEndTime: ""
@@ -485,19 +485,19 @@ export default {
               para.luggageTypeId = 3;
             }
 
-            if (para.calculateRuleId === "普通物件-规则1(按小时计费)") {
-              para.calculateRuleId = 1;
-            } else if (para.calculateRuleId === "普通物件-规则2(按次数计费)") {
-              para.calculateRuleId = 2;
-            } else if (para.calculateRuleId === "易碎物件-规则1(按小时计费)") {
-              para.calculateRuleId = 3;
-            } else if (para.calculateRuleId === "易碎物件-规则2(按次数计费)") {
-              para.calculateRuleId = 4;
-            } else if (para.calculateRuleId === "贵重物件-规则1(按小时计费)") {
-              para.calculateRuleId = 5;
-            } else if (para.calculateRuleId === "贵重物件-规则2(按次数计费)") {
-              para.calculateRuleId = 6;
-            }
+            // if (para.calculateRuleId === "普通物件-规则1(按小时计费)") {
+            //   para.calculateRuleId = 1;
+            // } else if (para.calculateRuleId === "普通物件-规则2(按次数计费)") {
+            //   para.calculateRuleId = 2;
+            // } else if (para.calculateRuleId === "易碎物件-规则1(按小时计费)") {
+            //   para.calculateRuleId = 3;
+            // } else if (para.calculateRuleId === "易碎物件-规则2(按次数计费)") {
+            //   para.calculateRuleId = 4;
+            // } else if (para.calculateRuleId === "贵重物件-规则1(按小时计费)") {
+            //   para.calculateRuleId = 5;
+            // } else if (para.calculateRuleId === "贵重物件-规则2(按次数计费)") {
+            //   para.calculateRuleId = 6;
+            // }
 
             delete para.luggageId;
             delete para.luggageRecordNo;
