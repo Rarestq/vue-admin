@@ -61,15 +61,8 @@
       ></el-table-column>
       <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button
-            size="small"
-            @click="handleEdit(scope.$index, scope.row)"
-          >编辑</el-button>
-          <el-button
-            type="danger"
-            size="small"
-            @click="handleDel(scope.$index, scope.row)"
-          >删除</el-button>
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -250,7 +243,7 @@ export default {
         adminName: "",
         adminPhone: "",
         password: "",
-        adminType: null
+        adminType: -1
       }
     };
   },
@@ -339,14 +332,20 @@ export default {
             delete para.gmtModified;
             saveAdmin(para).then(res => {
               this.editLoading = false;
-              //NProgress.done();
-              this.$message({
-                message: "提交成功",
-                type: "success"
-              });
-              this.$refs["editForm"].resetFields();
-              this.editFormVisible = false;
-              this.getAdmins();
+              if (res.success === true) {
+                this.$message({
+                  message: "提交成功",
+                  type: "success"
+                });
+                this.$refs["editForm"].resetFields();
+                this.editFormVisible = false;
+                this.getAdmins();
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: "error"
+                });
+              }
             });
           });
         }
@@ -373,14 +372,20 @@ export default {
             delete para.gmtModified;
             addAdmin(para).then(res => {
               this.addLoading = false;
-              //NProgress.done();
-              this.$message({
-                message: "提交成功",
-                type: "success"
-              });
-              this.$refs["addForm"].resetFields();
-              this.addFormVisible = false;
-              this.getAdmins();
+              if (res.success === true) {
+                this.$message({
+                  message: "提交成功",
+                  type: "success"
+                });
+                this.$refs["addForm"].resetFields();
+                this.addFormVisible = false;
+                this.getAdmins();
+              } else {
+                this.$message({
+                  message: res.message,
+                  type: "error"
+                });
+              }
             });
           });
         }

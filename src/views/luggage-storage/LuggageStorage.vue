@@ -143,21 +143,6 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="计费规则">
-          <el-select
-            v-model="addForm.calculateRuleId"
-            value-key="calculateRuleId"
-            clearable
-            placeholder="请选择计费规则"
-          >
-            <el-option
-              v-for="item in calculateRules"
-              :key="item.calculateRuleId"
-              :label="item.label"
-              :value="item.calculateRuleId"
-            ></el-option>
-          </el-select>
-        </el-form-item> -->
         <el-form-item label="备注">
           <el-input
             v-model="addForm.remark"
@@ -255,34 +240,6 @@ export default {
       ],
       value: "",
 
-      // 计费规则
-      // calculateRules: [
-      //   {
-      //     calculateRuleId: "1",
-      //     label: "普通物件-规则1(按小时计费)"
-      //   },
-      //   {
-      //     calculateRuleId: "2",
-      //     label: "普通物件-规则2(按次数计费)"
-      //   },
-      //   {
-      //     calculateRuleId: "3",
-      //     label: "易碎物件-规则1(按小时计费)"
-      //   },
-      //   {
-      //     calculateRuleId: "4",
-      //     label: "易碎物件-规则2(按次数计费)"
-      //   },
-      //   {
-      //     calculateRuleId: "5",
-      //     label: "贵重物件-规则1(按小时计费)"
-      //   },
-      //   {
-      //     calculateRuleId: "6",
-      //     label: "贵重物件-规则2(按次数计费)"
-      //   }
-      // ],
-      // calculateRuleId: "",
       filters: {
         condition: "",
         luggageTypeId: null
@@ -307,6 +264,13 @@ export default {
         luggageTypeId: [
           { required: true, message: "请选择行李类型", trigger: "blur" }
         ],
+        storageStartTime: [
+          {
+            required: true,
+            message: "请选择寄存开始日期",
+            trigger: "blur"
+          }
+        ],
         storageEndTime: [
           { required: true, message: "请选择寄存结束日期", trigger: "blur" }
         ]
@@ -316,8 +280,7 @@ export default {
         adminName: this.adminName,
         depositorName: "",
         depositorPhone: "",
-        luggageTypeId: null,
-        // calculateRuleId: null,
+        luggageTypeId: 1,
         remark: "",
         storageStartTime: "",
         storageEndTime: ""
@@ -463,7 +426,6 @@ export default {
         depositorName: "",
         depositorPhone: "",
         luggageTypeId: null,
-        // calculateRuleId: null,
         remark: "",
         storageStartTime: "",
         storageEndTime: ""
@@ -485,19 +447,18 @@ export default {
               para.luggageTypeId = 3;
             }
 
-            // if (para.calculateRuleId === "普通物件-规则1(按小时计费)") {
-            //   para.calculateRuleId = 1;
-            // } else if (para.calculateRuleId === "普通物件-规则2(按次数计费)") {
-            //   para.calculateRuleId = 2;
-            // } else if (para.calculateRuleId === "易碎物件-规则1(按小时计费)") {
-            //   para.calculateRuleId = 3;
-            // } else if (para.calculateRuleId === "易碎物件-规则2(按次数计费)") {
-            //   para.calculateRuleId = 4;
-            // } else if (para.calculateRuleId === "贵重物件-规则1(按小时计费)") {
-            //   para.calculateRuleId = 5;
-            // } else if (para.calculateRuleId === "贵重物件-规则2(按次数计费)") {
-            //   para.calculateRuleId = 6;
-            // }
+            if (
+              para.storageStartTime == null ||
+              para.storageEndTime == null ||
+              para.depositorName == null ||
+              para.depositorName == null ||
+              para.luggageTypeId == null
+            ) {
+              this.$message({
+                 message: "参数不能为空",
+                 type: "error"
+              })
+            }
 
             delete para.luggageId;
             delete para.luggageRecordNo;
@@ -519,17 +480,26 @@ export default {
                     new Date(para.storageEndTime),
                     "yyyy-MM-dd hh:mm:ss"
                   );
-            addLuggageStorageRecord(para).then(res => {
-              this.addLoading = false;
-              //NProgress.done();
-              this.$message({
-                message: "提交成功",
-                type: "success"
-              });
-              this.$refs["addForm"].resetFields();
-              this.addFormVisible = false;
-              this.getLuggageStorageRecords();
-            });
+            addLuggageStorageRecord(para)
+              .then(res => {
+                this.addLoading = false;
+                console.log(res.status);
+                if (res.success === true || res.status === 200) {
+                  this.$message({
+                    message: "提交成功",
+                    type: "success"
+                  });
+                  this.$refs["addForm"].resetFields();
+                  this.addFormVisible = false;
+                  this.getLuggageStorageRecords();
+                } else {
+                  console.log(res.message);
+                  this.$message({
+                    message: res.message,
+                    type: "error"
+                  });
+                }
+              })
           });
         }
       });
