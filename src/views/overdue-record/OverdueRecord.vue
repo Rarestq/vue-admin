@@ -45,7 +45,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="depositorName" label="寄存人姓名" width="120"></el-table-column>
-      <el-table-column prop="depositorPhone" label="寄存人电话" width="120"></el-table-column>
+      <el-table-column prop="depositorPhone" label="寄存人电话" width="130"></el-table-column>
       <el-table-column label="状态" width="120">
         <template slot-scope="scope">
           <el-tag type="success" v-if="scope.row.status === '已逾期'">已逾期</el-tag>

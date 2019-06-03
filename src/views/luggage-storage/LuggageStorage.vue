@@ -434,6 +434,7 @@ export default {
 
     // 新增行李寄存信息
     addSubmit: function() {
+      var that = this;
       this.$refs.addForm.validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
@@ -445,19 +446,6 @@ export default {
               para.luggageTypeId = 2;
             } else if (para.luggageTypeId === "贵重物件") {
               para.luggageTypeId = 3;
-            }
-
-            if (
-              para.storageStartTime == null ||
-              para.storageEndTime == null ||
-              para.depositorName == null ||
-              para.depositorName == null ||
-              para.luggageTypeId == null
-            ) {
-              this.$message({
-                 message: "参数不能为空",
-                 type: "error"
-              })
             }
 
             delete para.luggageId;
@@ -480,8 +468,27 @@ export default {
                     new Date(para.storageEndTime),
                     "yyyy-MM-dd hh:mm:ss"
                   );
-            addLuggageStorageRecord(para)
-              .then(res => {
+
+            let dateDiff = that.calculateDateDiff(
+              para.storageStartTime,
+              para.storageEndTime,
+              "second"
+            );
+
+            if (!that.checkPhone(para.depositorPhone)) {
+              this.addLoading = false;
+              this.$message({
+                message: "手机号码格式有误",
+                type: "error"
+              });
+            } else if (dateDiff <= 0) {
+              this.addLoading = false;
+              this.$message({
+                message: "寄存结束时间应大于开始时间",
+                type: "error"
+              });
+            } else {
+              addLuggageStorageRecord(para).then(res => {
                 this.addLoading = false;
                 console.log(res.status);
                 if (res.success === true || res.status === 200) {
@@ -499,10 +506,55 @@ export default {
                     type: "error"
                   });
                 }
-              })
+              });
+            }
           });
         }
       });
+    },
+
+    /*
+     * 获得时间差,时间格式为 年-月-日 小时:分钟:秒 或者 年/月/日 小时：分钟：秒
+     * 其中，年月日为全格式，例如 ： 2010-10-12 01:00:00
+     * 返回精度为：秒，分，小时，天
+     */
+    calculateDateDiff: function(startTime, endTime, diffType) {
+      //将xxxx-xx-xx的时间格式，转换为 xxxx/xx/xx的格式
+      startTime = startTime.replace(/\-/g, "/");
+      endTime = endTime.replace(/\-/g, "/");
+
+      //将计算间隔类性字符转换为小写
+      diffType = diffType.toLowerCase();
+      var sTime = new Date(startTime); //开始时间
+      var eTime = new Date(endTime); //结束时间
+      //作为除数的数字
+      var divNum = 1;
+      switch (diffType) {
+        case "second":
+          divNum = 1000;
+          break;
+        case "minute":
+          divNum = 1000 * 60;
+          break;
+        case "hour":
+          divNum = 1000 * 3600;
+          break;
+        case "day":
+          divNum = 1000 * 3600 * 24;
+          break;
+        default:
+          break;
+      }
+      return parseInt((eTime.getTime() - sTime.getTime()) / parseInt(divNum));
+    },
+
+    // 手机号校验
+    checkPhone: function(phone) {
+      let regex = /^1[3-9][0-9]{9}$/;
+      if (!regex.test(phone)) {
+        return false;
+      }
+      return true;
     },
 
     selsChange: function(sels) {

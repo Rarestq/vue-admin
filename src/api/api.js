@@ -1,6 +1,9 @@
 import axios from 'axios';
 
+// 本地启动的 baseURL
 let base = 'http://localhost:8098/luggage_storage/api';
+
+// 阿里云服务器启动的 baseURL
 // let base = 'http://47.101.197.171:8098/luggage_storage/api';
 axios.defaults.withCredentials = true; // 让ajax携带cookie
 
